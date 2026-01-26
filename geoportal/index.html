@@ -17,12 +17,45 @@
         body { margin: 0; padding: 0; }
         #map { width: 100%; height: 100vh; }
         
-        /* Legenda */
-        .legend { background: white; padding: 10px; line-height: 20px; color: #333; border-radius: 5px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-family: Arial, sans-serif; font-size: 13px; }
-        .legend i { width: 14px; height: 14px; float: left; margin-right: 8px; margin-top: 3px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 2px #000; }
-        .legend h4 { margin: 0 0 5px; font-size: 15px; }
+        /* --- NOWY, IDEALNY STYL LEGENDY (Flexbox) --- */
+        .legend { 
+            background: white; 
+            padding: 12px;         /* Więcej oddechu */
+            color: #333; 
+            border-radius: 8px;    /* Ładniejsze zaokrąglenie */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); 
+            font-family: Arial, sans-serif; 
+            font-size: 13px;
+            min-width: 140px;      /* Stała szerokość, żeby nie skakało */
+        }
+        
+        .legend h4 { 
+            margin: 0 0 10px 0;    /* Odstęp pod tytułem */
+            font-size: 15px; 
+            font-weight: bold;
+            border-bottom: 1px solid #eee; /* Linia oddzielająca tytuł */
+            padding-bottom: 5px;
+        }
 
-        /* Poprawka dla OSM Pickera (żeby ikonka była widoczna) */
+        /* Kontener dla każdego wiersza (kółko + tekst) */
+        .legend div {
+            display: flex;          /* Układaj w rzędzie */
+            align-items: center;    /* Centruj pionowo idealnie */
+            margin-bottom: 6px;     /* Odstęp między wierszami */
+        }
+
+        /* Styl kółeczka */
+        .legend i { 
+            width: 16px;            /* Większe kółka */
+            height: 16px; 
+            margin-right: 10px;     /* Odstęp od tekstu */
+            border-radius: 50%; 
+            border: 2px solid white; 
+            box-shadow: 0 0 3px rgba(0,0,0,0.4); /* Lekki cień kółka */
+            flex-shrink: 0;         /* Zapobiega zgniataniu kółka */
+        }
+
+        /* --- Styl dla OSM Pickera (żeby ikonka była widoczna) --- */
         .leaflet-control-osmdatapicker {
             background-image: url('assets/openstreetmap.svg') !important;
             background-size: 24px 24px;
@@ -50,7 +83,7 @@
     <script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
 
     <script>
-        // --- DANE GEOJSON (Pełne) ---
+        // --- DANE GEOJSON ---
         var komercyjneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
@@ -134,7 +167,7 @@
         layerKomercyjne.addTo(map);
         layerHistoryczne.addTo(map);
 
-        // Grupa do wyszukiwarki (żeby szukało we wszystkich lotniskach)
+        // Grupa do wyszukiwarki
         var wszystkieLotniska = L.layerGroup([layerKomercyjne, layerAeroklubowe, layerHistoryczne]);
 
         // Panel Warstw
@@ -145,11 +178,12 @@
               "<span style='color:#636e72; font-weight:bold'>Historyczne</span>": layerHistoryczne }
         ).addTo(map);
 
-        // Legenda
+        // --- LEGENDA (POPRAWIONA) ---
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
             div.innerHTML += '<h4>Legenda</h4>';
+            // Każdy element w osobnym DIVie, żeby Flexbox zadziałał
             div.innerHTML += '<div><i style="background: #d63031;"></i> Pasażerskie</div>';
             div.innerHTML += '<div><i style="background: #0984e3;"></i> Aeroklubowe</div>';
             div.innerHTML += '<div><i style="background: #636e72;"></i> Historyczne</div>';
@@ -157,31 +191,24 @@
         };
         legend.addTo(map);
 
-
         // ==========================================
-        //  TUTAJ SĄ TWOJE NOWE WTYCZKI (SuperFunkcje)
+        //  DODATKI (WTYCZKI)
         // ==========================================
 
-        // 1. WYSZUKIWARKA (Lupa)
-        // Pozwala wpisać nazwę lotniska, np. "Babice"
+        // 1. WYSZUKIWARKA
         var searchControl = new L.Control.Search({
             layer: wszystkieLotniska,
             propertyName: 'nazwa',
             marker: false,
-            moveToLocation: function(latlng, title, map) {
-                map.setView(latlng, 14); // Przybliż do znalezionego lotniska
-            }
+            moveToLocation: function(latlng, title, map) { map.setView(latlng, 14); }
         });
         map.addControl(searchControl);
 
-
-        // 2. MINIMAPA (Mała mapka w rogu)
+        // 2. MINIMAPA
         var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         var miniMap = new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
 
-
-        // 3. LINIJKA (Measure Tool)
-        // Ikonka miarki do mierzenia pasów startowych
+        // 3. LINIJKA
         L.control.polylineMeasure({
             position: 'topleft',
             unit: 'metres',
@@ -191,12 +218,11 @@
             showUnitControl: true
         }).addTo(map);
 
-
-        // 4. OSM DATA PICKER (Twoja stara wtyczka)
-        // Zostawiona, żebyś mógł pokazać, że "jest, ale serwer przeciążony"
+        // 4. OSM DATA PICKER
         L.OSMDataPicker.addControl(map);
 
     </script>
 </body>
 </html>
+
 
