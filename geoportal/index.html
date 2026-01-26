@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wielofunkcyjny Geoportal Lotnisk - Pełne Dane</title>
+    <title>Wielofunkcyjny Geoportal Lotnisk - Wersja Finalna</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="osmdatapicker-page.css" />
@@ -21,27 +21,52 @@
         .legend div { display: flex; align-items: center; margin-bottom: 6px; }
         .legend i { width: 16px; height: 16px; margin-right: 10px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); flex-shrink: 0; }
 
-        /* Popupy */
+        /* Popupy - stylizacja dymku */
         .custom-popup { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; max-width: 280px; }
-        .custom-popup h3 { margin: 0 0 5px 0; color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 3px; }
+        .custom-popup h3 { margin: 0 0 8px 0; color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 3px; }
         
-        /* NOWOŚĆ: Styl dla ramki z kodami */
+        /* --- NOWY STYL KODÓW (ŁADNIEJSZY) --- */
         .codes-box { 
-            background-color: #f1f2f6; 
-            padding: 5px; 
-            border-radius: 4px; 
-            font-family: 'Courier New', monospace; 
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 12px;
-            color: #2c3e50;
+            background-color: #f8f9fa; /* Bardzo jasne tło */
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
             display: flex;
-            justify-content: space-between; /* Rozrzuca kody na boki */
-            border: 1px solid #dcdde1;
+            flex-direction: column; /* Układ pionowy - jeden pod drugim */
+            gap: 4px;
         }
 
-        .popup-photo { width: 100%; height: auto; border-radius: 4px; margin: 8px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: block; }
-        .wiki-link { display: inline-block; padding: 5px 10px; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box; }
+        .code-row {
+            display: flex;
+            justify-content: space-between; /* Etykieta po lewej, kod po prawej */
+            align-items: center;
+            border-bottom: 1px dashed #dee2e6; /* Linia przerywana między wierszami */
+            padding-bottom: 4px;
+            margin-bottom: 2px;
+        }
+        
+        .code-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; } /* Ostatni bez linii */
+
+        .code-label {
+            color: #7f8c8d; /* Szary kolor etykiety */
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .code-value {
+            font-family: 'Consolas', 'Monaco', monospace; /* Techniczna czcionka dla kodu */
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #e2e6ea; /* Tło pod samym kodem */
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .popup-photo { width: 100%; height: auto; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: block; }
+        .wiki-link { display: inline-block; padding: 6px 0; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; width: 100%; text-align: center; transition: background 0.3s; }
         .wiki-link:hover { background-color: #2980b9; }
 
         /* Fix ikonki wtyczki */
@@ -66,7 +91,7 @@
 
     <script>
         // ==========================================
-        //  DANE (Zaktualizowane o ICAO i IATA)
+        //  DANE LOTNISK
         // ==========================================
 
         var komercyjneGeoJSON = {
@@ -75,7 +100,7 @@
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Chopin", 
                     "kodICAO": "EPWA", "kodIATA": "WAW",
-                    "opis": "Największe lotnisko w Polsce.",
+                    "opis": "Największe lotnisko w Polsce. Główny hub PLL LOT.",
                     "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG/320px-Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie"
                 }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
@@ -107,7 +132,6 @@
         var aerokluboweGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                // Aerokluby często nie mają IATA, wpisujemy "-"
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Babice", 
                     "kodICAO": "EPBC", "kodIATA": "-",
@@ -134,10 +158,9 @@
         var historyczneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                // Historyczne: Często nie miały ICAO (n/d), chyba że działały po 1947 r.
                 { "type": "Feature", "properties": { 
                     "nazwa": "Kraków Rakowice-Czyżyny", 
-                    "kodICAO": "EPKC", "kodIATA": "n/d", // EPKC to kod historyczny
+                    "kodICAO": "EPKC", "kodIATA": "n/d", 
                     "opis": "Muzeum Lotnictwa Polskiego.",
                     "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Krakow_Rakowice_Czyzyny_Airport.jpg/320px-Krakow_Rakowice_Czyzyny_Airport.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Krak%C3%B3w-Rakowice-Czy%C5%BCyny"
@@ -157,7 +180,7 @@
             ]
         };
 
-        // --- INICJALIZACJA MAPY ---
+        // --- MAPA ---
         var map = L.map('map').setView([52.00, 19.00], 6);
 
         // Podkłady
@@ -165,7 +188,7 @@
         var esriSatelita = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
         var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
 
-        // --- FUNKCJA TWORZENIA DYMKÓW (Z KODAMI ICAO/IATA) ---
+        // --- FUNKCJA TWORZENIA ZAAWANSOWANEGO POPUPU ---
         function createPopupContent(feature) {
             var props = feature.properties;
             var html = "<div class='custom-popup'>";
@@ -178,18 +201,29 @@
                 html += "<img src='" + props.foto + "' class='popup-photo' alt='" + props.nazwa + "'>";
             }
             
-            // Pasek z kodami ICAO / IATA
+            // RAMKA Z KODAMI (Nowa, ładna wersja)
             html += "<div class='codes-box'>";
-            html += "<span>ICAO: " + (props.kodICAO ? props.kodICAO : "n/d") + "</span>";
-            html += "<span>IATA: " + (props.kodIATA ? props.kodIATA : "n/d") + "</span>";
+            
+            // Wiersz 1: ICAO
+            html += "<div class='code-row'>";
+            html += "<span class='code-label'>ICAO</span>";
+            html += "<span class='code-value'>" + (props.kodICAO ? props.kodICAO : "n/d") + "</span>";
             html += "</div>";
+            
+            // Wiersz 2: IATA
+            html += "<div class='code-row'>";
+            html += "<span class='code-label'>IATA</span>";
+            html += "<span class='code-value'>" + (props.kodIATA ? props.kodIATA : "n/d") + "</span>";
+            html += "</div>";
+            
+            html += "</div>"; // Koniec ramki
             
             // Opis
             html += "<i>" + props.opis + "</i><br>";
             
-            // Link
+            // Link do Wiki (jako przycisk na dole)
             if (props.wiki) {
-                html += "<a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a>";
+                html += "<div style='margin-top:8px;'><a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a></div>";
             }
             
             html += "</div>";
@@ -200,17 +234,16 @@
             layer.bindPopup(createPopupContent(feature));
         }
 
-        // Style
+        // Style kropek
         function styleK(f, l) { return L.circleMarker(l, { radius: 8, fillColor: "#d63031", color: "#fff", weight: 2, fillOpacity: 0.9 }); }
         function styleA(f, l) { return L.circleMarker(l, { radius: 6, fillColor: "#0984e3", color: "#fff", weight: 2, fillOpacity: 0.8 }); }
         function styleH(f, l) { return L.circleMarker(l, { radius: 7, fillColor: "#636e72", color: "#2d3436", weight: 2, fillOpacity: 0.8 }); }
 
-        // Warstwy GeoJSON
+        // Warstwy
         var layerKomercyjne = L.geoJSON(komercyjneGeoJSON, { pointToLayer: styleK, onEachFeature: onEachPopup });
         var layerAeroklubowe = L.geoJSON(aerokluboweGeoJSON, { pointToLayer: styleA, onEachFeature: onEachPopup });
         var layerHistoryczne = L.geoJSON(historyczneGeoJSON, { pointToLayer: styleH, onEachFeature: onEachPopup });
 
-        // Dodanie domyślne
         layerKomercyjne.addTo(map);
         layerHistoryczne.addTo(map);
 
@@ -224,7 +257,7 @@
               "<span style='color:#636e72; font-weight:bold'>Historyczne</span>": layerHistoryczne }
         ).addTo(map);
 
-        // Legenda Flexbox
+        // Legenda
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
@@ -236,27 +269,23 @@
         };
         legend.addTo(map);
 
-        // --- WTYCZKI ---
-        // 1. Wyszukiwarka
+        // Wtyczki
         var searchControl = new L.Control.Search({
             layer: wszystkieLotniska, propertyName: 'nazwa', marker: false,
             moveToLocation: function(latlng, title, map) { map.setView(latlng, 14); }
         });
         map.addControl(searchControl);
 
-        // 2. MiniMapa
         var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
 
-        // 3. Linijka
         L.control.polylineMeasure({ position: 'topleft', unit: 'metres', showClearControl: true }).addTo(map);
-
-        // 4. OSM Data Picker
         L.OSMDataPicker.addControl(map);
 
     </script>
 </body>
 </html>
+
 
 
 
