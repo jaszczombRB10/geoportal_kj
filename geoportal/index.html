@@ -7,10 +7,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <link
-  rel="stylesheet"
-  href="./node_modules/leaflet.osmdatapicker/src/osmdatapicker-page.css"
-/>
+    <link rel="stylesheet" href="osmdatapicker-page.css" />
 
     <style>
         body { margin: 0; padding: 0; }
@@ -41,6 +38,9 @@
         }
         /* Nagłówki w legendzie */
         .legend h4 { margin: 0 0 5px; font-size: 15px; }
+        
+        /* Ważne: Zapewnia widoczność okna wtyczki na wierzchu */
+        #osmdatapicker-dialog { z-index: 9999 !important; }
     </style>
 </head>
 <body>
@@ -49,7 +49,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <script src="./node_modules/leaflet.osmdatapicker/src/leaflet-osmdatapicker.js"></script>
+    <script src="leaflet-osmdatapicker.js"></script>
 
     <script>
         // --- DANE 1: Lotniska Komercyjne (Pasażerskie - Współczesne) ---
