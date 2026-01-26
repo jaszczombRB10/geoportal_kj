@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wielofunkcyjny Geoportal Lotnisk - Wersja Finalna (Poprawione Zdjęcia)</title>
+    <title>Geoportal Lotnisk - Pełne Zdjęcia</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="osmdatapicker-page.css" />
@@ -72,7 +72,7 @@
 
     <script>
         // ==========================================
-        //  DANE LOTNISK
+        //  DANE LOTNISK (Pełna lista z indywidualnymi zdjęciami)
         // ==========================================
 
         var komercyjneGeoJSON = {
@@ -81,105 +81,105 @@
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Chopin", "kodICAO": "EPWA", "kodIATA": "WAW",
                     "opis": "Największe lotnisko w Polsce. Główny hub PLL LOT.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG/320px-Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG/640px-Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie"
                 }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Kraków Balice", "kodICAO": "EPKK", "kodIATA": "KRK",
-                    "opis": "Port im. Jana Pawła II. Drugi co do wielkości w kraju.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Krakow_Airport_terminal.jpg/320px-Krakow_Airport_terminal.jpg",
+                    "opis": "Międzynarodowy port im. Jana Pawła II.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Krakow_Airport_terminal.jpg/640px-Krakow_Airport_terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice"
                 }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Gdańsk Rębiechowo", "kodICAO": "EPGD", "kodIATA": "GDN",
-                    "opis": "Port im. Lecha Wałęsy. Główny port Polski Północnej.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG/320px-Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG",
+                    "opis": "Port im. Lecha Wałęsy.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG/640px-Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gda%C5%84sk-R%C4%99biechowo"
                 }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Katowice Pyrzowice", "kodICAO": "EPKT", "kodIATA": "KTW",
-                    "opis": "Centrum polskiego ruchu czarterowego i cargo.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Katowice_Airport_Terminal_C.jpg/320px-Katowice_Airport_Terminal_C.jpg",
+                    "opis": "Centrum polskiego ruchu czarterowego.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Katowice_Airport_Terminal_C.jpg/640px-Katowice_Airport_Terminal_C.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Katowice-Pyrzowice"
                 }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Modlin", "kodICAO": "EPMO", "kodIATA": "WMI",
-                    "opis": "Lotnisko niskokosztowe, główna baza Ryanair.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Port_Lotniczy_Warszawa-Modlin.JPG/320px-Port_Lotniczy_Warszawa-Modlin.JPG",
+                    "opis": "Lotnisko niskokosztowe, baza Ryanair.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Port_Lotniczy_Warszawa-Modlin.JPG/640px-Port_Lotniczy_Warszawa-Modlin.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Modlin"
                 }, "geometry": { "type": "Point", "coordinates": [20.6518, 52.4511] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Wrocław Strachowice", "kodICAO": "EPWR", "kodIATA": "WRO",
                     "opis": "Port Lotniczy im. Mikołaja Kopernika.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Wroclaw_airport_terminal.JPG/320px-Wroclaw_airport_terminal.JPG",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Wroclaw_airport_terminal.JPG/640px-Wroclaw_airport_terminal.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Wroc%C5%82aw-Strachowice"
                 }, "geometry": { "type": "Point", "coordinates": [16.8858, 51.1027] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Poznań Ławica", "kodICAO": "EPPO", "kodIATA": "POZ",
-                    "opis": "Jedno z najstarszych lotnisk w Polsce (1913).",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Poznan_Lawica_Airport_-_terminal.jpg/320px-Poznan_Lawica_Airport_-_terminal.jpg",
+                    "opis": "Jedno z najstarszych lotnisk w Polsce.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Poznan_Lawica_Airport_-_terminal.jpg/640px-Poznan_Lawica_Airport_-_terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Pozna%C5%84-%C5%81awica"
                 }, "geometry": { "type": "Point", "coordinates": [16.8263, 52.4210] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Rzeszów Jasionka", "kodICAO": "EPRZ", "kodIATA": "RZE",
-                    "opis": "Posiada drugi najdłuższy pas startowy w Polsce (3200m).",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg/320px-Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg",
+                    "opis": "Ważny węzeł cargo.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg/640px-Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Rzesz%C3%B3w-Jasionka"
                 }, "geometry": { "type": "Point", "coordinates": [22.0187, 50.1100] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Szczecin Goleniów", "kodICAO": "EPSC", "kodIATA": "SZZ",
                     "opis": "Port Lotniczy NSZZ Solidarność.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Airport_Szczecin-Goleniow_terminal.jpg/320px-Airport_Szczecin-Goleniow_terminal.jpg",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Airport_Szczecin-Goleniow_terminal.jpg/640px-Airport_Szczecin-Goleniow_terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Szczecin-Goleni%C3%B3w"
                 }, "geometry": { "type": "Point", "coordinates": [14.9022, 53.5847] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Lublin Świdnik", "kodICAO": "EPLB", "kodIATA": "LUZ",
-                    "opis": "Otwarty w 2012 roku. Posiada terminal zintegrowany z szynobusem.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG/320px-Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG",
+                    "opis": "Terminal zintegrowany z szynobusem.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG/640px-Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Lublin"
                 }, "geometry": { "type": "Point", "coordinates": [22.7136, 51.2403] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Bydgoszcz Szwederowo", "kodICAO": "EPBY", "kodIATA": "BZG",
-                    "opis": "Port Lotniczy im. Ignacego Jana Paderewskiego.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Bydgoszcz_Airport_Terminal.jpg/320px-Bydgoszcz_Airport_Terminal.jpg",
+                    "opis": "Port im. Paderewskiego.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Bydgoszcz_Airport_Terminal.jpg/640px-Bydgoszcz_Airport_Terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Bydgoszcz-Szwederowo"
                 }, "geometry": { "type": "Point", "coordinates": [17.9777, 53.0968] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Łódź Lublinek", "kodICAO": "EPLL", "kodIATA": "LCJ",
-                    "opis": "Port Lotniczy im. Władysława Reymonta.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Lodz_airport_terminal_2013.JPG/320px-Lodz_airport_terminal_2013.JPG",
+                    "opis": "Port im. Reymonta.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Lodz_airport_terminal_2013.JPG/640px-Lodz_airport_terminal_2013.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_%C5%81%C3%B3d%C5%BA-Lublinek"
                 }, "geometry": { "type": "Point", "coordinates": [19.3981, 51.7219] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Olsztyn Mazury", "kodICAO": "EPSY", "kodIATA": "SZY",
-                    "opis": "Jedyny port lotniczy w woj. warmińsko-mazurskim (Szymany).",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Port_Lotniczy_Olsztyn-Mazury_-_terminal.jpg/320px-Port_Lotniczy_Olsztyn-Mazury_-_terminal.jpg",
+                    "opis": "Jedyny port na Mazurach.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Port_Lotniczy_Olsztyn-Mazury_-_terminal.jpg/640px-Port_Lotniczy_Olsztyn-Mazury_-_terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Olsztyn-Mazury"
                 }, "geometry": { "type": "Point", "coordinates": [20.9377, 53.4819] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Zielona Góra Babimost", "kodICAO": "EPZG", "kodIATA": "IEG",
-                    "opis": "Najmniejszy port lotniczy w Polsce obsługujący ruch regularny.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Port_Lotniczy_Zielona_G%C3%B3ra-Babimost.jpg/320px-Port_Lotniczy_Zielona_G%C3%B3ra-Babimost.jpg",
+                    "opis": "Najmniejszy port pasażerski.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Port_Lotniczy_Zielona_G%C3%B3ra-Babimost.jpg/640px-Port_Lotniczy_Zielona_G%C3%B3ra-Babimost.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Zielona_G%C3%B3ra-Babimost"
                 }, "geometry": { "type": "Point", "coordinates": [15.7986, 52.1385] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Radom Sadków", "kodICAO": "EPRA", "kodIATA": "RDO",
-                    "opis": "Port Lotniczy Warszawa-Radom im. Bohaterów Radomskiego Czerwca.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Port_Lotniczy_Warszawa-Radom%2C_terminal.jpg/320px-Port_Lotniczy_Warszawa-Radom%2C_terminal.jpg",
+                    "opis": "Warszawa-Radom.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Port_Lotniczy_Warszawa-Radom%2C_terminal.jpg/640px-Port_Lotniczy_Warszawa-Radom%2C_terminal.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Radom"
                 }, "geometry": { "type": "Point", "coordinates": [21.2130, 51.3888] } }
             ]
@@ -191,91 +191,91 @@
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Babice", "kodICAO": "EPBC", "kodIATA": "-",
                     "opis": "Duże lotnisko szkoleniowe na Bemowie. Baza LPR.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Lotnisko_Babice_widok_z_powietrza.JPG/320px-Lotnisko_Babice_widok_z_powietrza.JPG",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Lotnisko_Babice_widok_z_powietrza.JPG/640px-Lotnisko_Babice_widok_z_powietrza.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Warszawa-Babice"
                 }, "geometry": { "type": "Point", "coordinates": [20.9126, 52.2685] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Jastarnia", "kodICAO": "EPJA", "kodIATA": "-", 
                     "opis": "Trawiaste lądowisko na Półwyspie Helskim.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jastarnia_sport_airport.JPG/320px-Jastarnia_sport_airport.JPG",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jastarnia_sport_airport.JPG/640px-Jastarnia_sport_airport.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/L%C4%85dowisko_Jastarnia"
                 }, "geometry": { "type": "Point", "coordinates": [18.6791, 54.7103] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Płock", "kodICAO": "EPPL", "kodIATA": "-", 
-                    "opis": "Aeroklub Ziemi Mazowieckiej. Gospodarz pokazów lotniczych.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Lotnisko_P%C5%82ock_2011.jpg/320px-Lotnisko_P%C5%82ock_2011.jpg",
+                    "opis": "Aeroklub Ziemi Mazowieckiej.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Lotnisko_P%C5%82ock_2011.jpg/640px-Lotnisko_P%C5%82ock_2011.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_P%C5%82ock"
                 }, "geometry": { "type": "Point", "coordinates": [19.7214, 52.5622] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Bielsko-Biała", "kodICAO": "EPBA", "kodIATA": "QEO", 
-                    "opis": "Lotnisko Aleksandrowice. Szybowcowa stolica Polski.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Bielsko-Bia%C5%82a_Aleksandrowice_airport_-_hangar.jpg/320px-Bielsko-Bia%C5%82a_Aleksandrowice_airport_-_hangar.jpg",
+                    "opis": "Szybowcowa stolica Polski.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Bielsko-Bia%C5%82a_Aleksandrowice_airport_-_hangar.jpg/640px-Bielsko-Bia%C5%82a_Aleksandrowice_airport_-_hangar.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Bielsko-Bia%C5%82a-Aleksandrowice"
                 }, "geometry": { "type": "Point", "coordinates": [19.0069, 49.8056] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Żar", "kodICAO": "EPZR", "kodIATA": "-", 
-                    "opis": "Górska Szkoła Szybowcowa AP w Międzybrodziu Żywieckim.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Gora_Zar_Lotnisko_P1220888.jpg/320px-Gora_Zar_Lotnisko_P1220888.jpg",
+                    "opis": "Górska Szkoła Szybowcowa.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Gora_Zar_Lotnisko_P1220888.jpg/640px-Gora_Zar_Lotnisko_P1220888.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_%C5%BBar"
                 }, "geometry": { "type": "Point", "coordinates": [19.2231, 49.7733] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Nowy Targ", "kodICAO": "EPNT", "kodIATA": "QWS", 
-                    "opis": "Najwyżej położone lotnisko w Polsce (628 m n.p.m.).", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Aeroklub_Nowy_Targ.JPG/320px-Aeroklub_Nowy_Targ.JPG",
+                    "opis": "Najwyżej położone lotnisko w Polsce.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Aeroklub_Nowy_Targ.JPG/640px-Aeroklub_Nowy_Targ.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Nowy_Targ"
                 }, "geometry": { "type": "Point", "coordinates": [20.0503, 49.4636] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Leszno", "kodICAO": "EPLS", "kodIATA": "-", 
-                    "opis": "Centralna Szkoła Szybowcowa Aeroklubu Polskiego.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Lotnisko_Leszno_-_CSS_AP_-_widok_z_wie%C5%BCy_w_kierunku_p%C3%B3%C5%82nocnym.JPG/320px-Lotnisko_Leszno_-_CSS_AP_-_widok_z_wie%C5%BCy_w_kierunku_p%C3%B3%C5%82nocnym.JPG",
+                    "opis": "Słynne lotnisko szybowcowe.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Lotnisko_Leszno_-_CSS_AP_-_widok_z_wie%C5%BCy_w_kierunku_p%C3%B3%C5%82nocnym.JPG/640px-Lotnisko_Leszno_-_CSS_AP_-_widok_z_wie%C5%BCy_w_kierunku_p%C3%B3%C5%82nocnym.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Leszno"
                 }, "geometry": { "type": "Point", "coordinates": [16.5147, 51.8361] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Toruń", "kodICAO": "EPTO", "kodIATA": "-", 
-                    "opis": "Aeroklub Pomorski im. gen. pil. Stanisława Skalskiego.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ep_torun.jpg/320px-Ep_torun.jpg",
+                    "opis": "Aeroklub Pomorski.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ep_torun.jpg/640px-Ep_torun.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Toru%C5%84"
                 }, "geometry": { "type": "Point", "coordinates": [18.5458, 53.0297] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Suwałki", "kodICAO": "EPSU", "kodIATA": "ZWK", 
-                    "opis": "Lokalne lotnisko z utwardzonym pasem (2020).", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Lotnisko_Suwa%C5%82ki.jpg/320px-Lotnisko_Suwa%C5%82ki.jpg",
+                    "opis": "Lokalne lotnisko z utwardzonym pasem.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Lotnisko_Suwa%C5%82ki.jpg/640px-Lotnisko_Suwa%C5%82ki.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Suwa%C5%82ki"
                 }, "geometry": { "type": "Point", "coordinates": [22.8989, 54.0725] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Kielce Masłów", "kodICAO": "EPKA", "kodIATA": "QYC", 
-                    "opis": "Lotnisko sportowe i sanitarne pod Kielcami.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Lotnisko_Kielce-Mas%C5%82%C3%B3w.jpg/320px-Lotnisko_Kielce-Mas%C5%82%C3%B3w.jpg",
+                    "opis": "Aeroklub Kielecki.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Lotnisko_Kielce-Mas%C5%82%C3%B3w.jpg/640px-Lotnisko_Kielce-Mas%C5%82%C3%B3w.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Kielce-Mas%C5%82%C3%B3w"
                 }, "geometry": { "type": "Point", "coordinates": [20.7297, 50.8967] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Mielec", "kodICAO": "EPML", "kodIATA": "QEA", 
-                    "opis": "Lotnisko fabryczne PZL Mielec i sportowe.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Mielec_Lotnisko_2.jpg/320px-Mielec_Lotnisko_2.jpg",
+                    "opis": "Lotnisko fabryczne i sportowe.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Mielec_Lotnisko_2.jpg/640px-Mielec_Lotnisko_2.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Mielec"
                 }, "geometry": { "type": "Point", "coordinates": [21.4633, 50.3222] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Jelenia Góra", "kodICAO": "EPJG", "kodIATA": "-", 
-                    "opis": "Aeroklub Jeleniogórski u podnóża Karkonoszy.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lotnisko_Jelenia_G%C3%B3ra.jpg/320px-Lotnisko_Jelenia_G%C3%B3ra.jpg",
+                    "opis": "Aeroklub Jeleniogórski.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lotnisko_Jelenia_G%C3%B3ra.jpg/640px-Lotnisko_Jelenia_G%C3%B3ra.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Jelenia_G%C3%B3ra"
                 }, "geometry": { "type": "Point", "coordinates": [15.7939, 50.8986] } },
                 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Arłamów", "kodICAO": "EPAR", "kodIATA": "-", 
-                    "opis": "Lądowisko w b. Ośrodku Rządowym, obecnie Hotel Arłamów.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ar%C5%82am%C3%B3w_hotel_04.JPG/320px-Ar%C5%82am%C3%B3w_hotel_04.JPG",
+                    "opis": "Lądowisko hotelowe.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ar%C5%82am%C3%B3w_hotel_04.JPG/640px-Ar%C5%82am%C3%B3w_hotel_04.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/L%C4%85dowisko_Ar%C5%82am%C3%B3w"
                 }, "geometry": { "type": "Point", "coordinates": [22.5142, 49.6583] } }
             ]
@@ -286,85 +286,85 @@
             "features": [
                 { "type": "Feature", "properties": { 
                     "nazwa": "Kraków Rakowice-Czyżyny", "kodICAO": "EPKC", "kodIATA": "n/d", 
-                    "opis": "Jedno z pierwszych lotnisk w Europie. Dziś Muzeum Lotnictwa.",
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Krakow_Rakowice_Czyzyny_Airport.jpg/320px-Krakow_Rakowice_Czyzyny_Airport.jpg",
+                    "opis": "Muzeum Lotnictwa Polskiego.",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Krakow_Rakowice_Czyzyny_Airport.jpg/640px-Krakow_Rakowice_Czyzyny_Airport.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Krak%C3%B3w-Rakowice-Czy%C5%BCyny"
                 }, "geometry": { "type": "Point", "coordinates": [19.9900, 50.0760] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Mokotów", "kodICAO": "n/d", "kodIATA": "n/d", 
-                    "opis": "Główny port Warszawy do 1934. Obecnie park Pole Mokotowskie.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pole_Mokotowskie_1935_port_lotniczy.jpg/320px-Pole_Mokotowskie_1935_port_lotniczy.jpg",
+                    "opis": "Główny port Warszawy do 1934.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pole_Mokotowskie_1935_port_lotniczy.jpg/640px-Pole_Mokotowskie_1935_port_lotniczy.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Mokotowskie"
                 }, "geometry": { "type": "Point", "coordinates": [21.0000, 52.2100] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Gdańsk Wrzeszcz", "kodICAO": "EPGD", "kodIATA": "GDN", 
-                    "opis": "Działało do 1974. Obecnie dzielnica Zaspa (pas startowy to ulica).", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Flughafen_Danzig-Langfuhr_1941.jpg/320px-Flughafen_Danzig-Langfuhr_1941.jpg",
+                    "opis": "Działało do 1974. Obecnie dzielnica Zaspa.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Flughafen_Danzig-Langfuhr_1941.jpg/640px-Flughafen_Danzig-Langfuhr_1941.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Gda%C5%84sk-Wrzeszcz"
                 }, "geometry": { "type": "Point", "coordinates": [18.6100, 54.3900] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Gdynia w Rumi-Zagórzu", "kodICAO": "n/d", "kodIATA": "n/d", 
-                    "opis": "Główny port pasażerski Gdyni w latach 1935-1939.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Rumia-Zag%C3%B3rze_lotnisko.jpg/320px-Rumia-Zag%C3%B3rze_lotnisko.jpg",
+                    "opis": "Główny port Gdyni w latach 1935-1939.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Rumia-Zag%C3%B3rze_lotnisko.jpg/640px-Rumia-Zag%C3%B3rze_lotnisko.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gdynia_w_Rumi-Zag%C3%B3rzu"
                 }, "geometry": { "type": "Point", "coordinates": [18.4300, 54.5700] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Wrocław Gądów Mały", "kodICAO": "n/d", "kodIATA": "n/d", 
-                    "opis": "Dawne lotnisko miejskie. Zlikwidowane w 1978. Obecnie osiedle.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Wroclaw_ul_Lotnicza_Budynek_portu_lotniczego_1.jpg/320px-Wroclaw_ul_Lotnicza_Budynek_portu_lotniczego_1.jpg",
+                    "opis": "Dawne lotnisko miejskie. Obecnie osiedle.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Wroclaw_ul_Lotnicza_Budynek_portu_lotniczego_1.jpg/640px-Wroclaw_ul_Lotnicza_Budynek_portu_lotniczego_1.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Wroc%C5%82aw-G%C4%85d%C3%B3w_Ma%C5%82y"
                 }, "geometry": { "type": "Point", "coordinates": [16.9700, 51.1200] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Szczecin Dąbie", "kodICAO": "EPSD", "kodIATA": "n/d", 
-                    "opis": "Obsługiwało ruch pasażerski do lat 60. Obecnie aeroklubowe.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Aeroklub_Szczecinski_hangar.jpg/320px-Aeroklub_Szczecinski_hangar.jpg",
+                    "opis": "Pasażerskie do lat 60. Obecnie aeroklubowe.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Aeroklub_Szczecinski_hangar.jpg/640px-Aeroklub_Szczecinski_hangar.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Szczecin-D%C4%85bie"
                 }, "geometry": { "type": "Point", "coordinates": [14.6300, 53.3900] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Katowice Muchowiec (Hist.)", "kodICAO": "EPKM", "kodIATA": "n/d", 
-                    "opis": "Ruch pasażerski LOT w latach 1929-1958. Dziś tylko sportowe.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Terminal_lotniska_Katowice-Muchowiec_1930.jpg/320px-Terminal_lotniska_Katowice-Muchowiec_1930.jpg",
+                    "opis": "Ruch pasażerski 1929-1958. Dziś sportowe.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Terminal_lotniska_Katowice-Muchowiec_1930.jpg/640px-Terminal_lotniska_Katowice-Muchowiec_1930.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Katowice-Muchowiec"
                 }, "geometry": { "type": "Point", "coordinates": [19.0342, 50.2381] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Olsztyn Dajtki (Hist.)", "kodICAO": "EPOD", "kodIATA": "QYO", 
-                    "opis": "Przed wojną Lufthansa, po wojnie LOT. Obecnie sportowe.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lotnisko_Dajtki.jpg/320px-Lotnisko_Dajtki.jpg",
+                    "opis": "Przed wojną Lufthansa, po wojnie LOT.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lotnisko_Dajtki.jpg/640px-Lotnisko_Dajtki.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Olsztyn-Dajtki"
                 }, "geometry": { "type": "Point", "coordinates": [20.4239, 53.7744] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Koszalin Zegrze", "kodICAO": "EPKO", "kodIATA": "OSZ", 
-                    "opis": "Regularne loty pasażerskie w sezonie letnim 1965-1991.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Zegrze_Pomorskie_Airport.JPG/320px-Zegrze_Pomorskie_Airport.JPG",
+                    "opis": "Ruch pasażerski 1965-1991.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Zegrze_Pomorskie_Airport.JPG/640px-Zegrze_Pomorskie_Airport.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Koszalin-Zegrze_Pomorskie"
                 }, "geometry": { "type": "Point", "coordinates": [16.2600, 54.0400] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Słupsk Redzikowo", "kodICAO": "EPSK", "kodIATA": "OQL", 
-                    "opis": "Loty pasażerskie do lat 90. Obecnie baza tarczy antyrakietowej.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Slupsk_Redzikowo_Airport.JPG/320px-Slupsk_Redzikowo_Airport.JPG",
+                    "opis": "Loty pasażerskie do lat 90. Obecnie baza wojskowa.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Slupsk_Redzikowo_Airport.JPG/640px-Slupsk_Redzikowo_Airport.JPG",
                     "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_S%C5%82upsk-Redzikowo"
                 }, "geometry": { "type": "Point", "coordinates": [17.1000, 54.4700] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Białystok Krywlany (Hist.)", "kodICAO": "EPBK", "kodIATA": "QYY", 
-                    "opis": "Krótki epizod pasażerski po 1945 r. Obecnie rozbudowywane.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lotnisko_Bia%C5%82ystok-Krywlany.jpg/320px-Lotnisko_Bia%C5%82ystok-Krywlany.jpg",
+                    "opis": "Epizod pasażerski po 1945 r.", 
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lotnisko_Bia%C5%82ystok-Krywlany.jpg/640px-Lotnisko_Bia%C5%82ystok-Krywlany.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Bia%C5%82ystok-Krywlany"
                 }, "geometry": { "type": "Point", "coordinates": [23.1731, 53.1044] } },
 
                 { "type": "Feature", "properties": { 
                     "nazwa": "Częstochowa Rudniki (Hist.)", "kodICAO": "EPRU", "kodIATA": "CZW", 
                     "opis": "Sezonowe połączenie LOT w 1983 roku.", 
-                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Lotnisko_Rudniki.jpg/320px-Lotnisko_Rudniki.jpg",
+                    "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Lotnisko_Rudniki.jpg/640px-Lotnisko_Rudniki.jpg",
                     "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Cz%C4%99stochowa-Rudniki"
                 }, "geometry": { "type": "Point", "coordinates": [19.2056, 50.8847] } }
             ]
@@ -379,8 +379,6 @@
         var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
 
         // --- FUNKCJA POPUPÓW ---
-        // Dodano referrerPolicy="no-referrer" (Naprawia hotlinking)
-        // Dodano onerror="this.style.display='none'" (Ukrywa obrazek, jeśli padnie)
         function createPopupContent(feature) {
             var props = feature.properties;
             var html = "<div class='custom-popup'>";
@@ -388,8 +386,8 @@
             html += "<h3>" + props.nazwa + "</h3>";
             
             if (props.foto) {
-                // KLUCZOWA POPRAWKA: referrerpolicy="no-referrer"
-                html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer" onerror="this.style.display='none';">`;
+                // KLUCZOWE DLA WYŚWIETLANIA Z WIKIPEDII: referrerpolicy="no-referrer"
+                html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer">`;
             }
             
             html += "<div class='codes-box'>";
@@ -462,6 +460,7 @@
     </script>
 </body>
 </html>
+
 
 
 
