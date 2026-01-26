@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wielofunkcyjny Geoportal Lotnisk</title>
+    <title>Wielofunkcyjny Geoportal Lotnisk - Wersja Multimedialna</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <link rel="stylesheet" href="osmdatapicker-page.css" />
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.src.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css" />
     <link rel="stylesheet" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css" />
@@ -17,55 +15,53 @@
         body { margin: 0; padding: 0; }
         #map { width: 100%; height: 100vh; }
         
-        /* --- NOWY, IDEALNY STYL LEGENDY (Flexbox) --- */
-        .legend { 
-            background: white; 
-            padding: 12px;         /* Więcej oddechu */
-            color: #333; 
-            border-radius: 8px;    /* Ładniejsze zaokrąglenie */
-            box-shadow: 0 0 15px rgba(0,0,0,0.2); 
-            font-family: Arial, sans-serif; 
+        /* --- STYL LEGENDY --- */
+        .legend { background: white; padding: 12px; color: #333; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-family: Arial, sans-serif; font-size: 13px; min-width: 140px; }
+        .legend h4 { margin: 0 0 10px 0; font-size: 15px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .legend div { display: flex; align-items: center; margin-bottom: 6px; }
+        .legend i { width: 16px; height: 16px; margin-right: 10px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); flex-shrink: 0; }
+
+        /* --- STYL POPUPÓW (DYMKÓW) --- */
+        .custom-popup {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 13px;
-            min-width: 140px;      /* Stała szerokość, żeby nie skakało */
+            max-width: 260px; /* Ograniczenie szerokości dymku */
         }
-        
-        .legend h4 { 
-            margin: 0 0 10px 0;    /* Odstęp pod tytułem */
-            font-size: 15px; 
+        .custom-popup h3 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+            font-size: 16px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 3px;
+        }
+        .popup-photo {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            display: block;
+        }
+        .wiki-link {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: bold;
-            border-bottom: 1px solid #eee; /* Linia oddzielająca tytuł */
-            padding-bottom: 5px;
         }
+        .wiki-link:hover { background-color: #2980b9; }
 
-        /* Kontener dla każdego wiersza (kółko + tekst) */
-        .legend div {
-            display: flex;          /* Układaj w rzędzie */
-            align-items: center;    /* Centruj pionowo idealnie */
-            margin-bottom: 6px;     /* Odstęp między wierszami */
-        }
-
-        /* Styl kółeczka */
-        .legend i { 
-            width: 16px;            /* Większe kółka */
-            height: 16px; 
-            margin-right: 10px;     /* Odstęp od tekstu */
-            border-radius: 50%; 
-            border: 2px solid white; 
-            box-shadow: 0 0 3px rgba(0,0,0,0.4); /* Lekki cień kółka */
-            flex-shrink: 0;         /* Zapobiega zgniataniu kółka */
-        }
-
-        /* --- Styl dla OSM Pickera (żeby ikonka była widoczna) --- */
+        /* --- POPRAWKI DLA WTYCZEK --- */
         .leaflet-control-osmdatapicker {
             background-image: url('assets/openstreetmap.svg') !important;
-            background-size: 24px 24px;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: white !important;
-            width: 34px !important; height: 34px !important;
-            border: 2px solid #ccc; border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-            cursor: pointer;
+            background-size: 24px 24px; background-repeat: no-repeat; background-position: center;
+            background-color: white !important; width: 34px !important; height: 34px !important;
+            border: 2px solid #ccc; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer;
         }
         #osmdatapicker-dialog { z-index: 9999 !important; }
     </style>
@@ -75,22 +71,45 @@
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script src="leaflet-osmdatapicker.js"></script>
-
     <script src="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.src.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
     <script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
 
     <script>
-        // --- DANE GEOJSON ---
+        // ==========================================
+        //  DANE GEOJSON (Z DODANYMI ZDJĘCIAMI I LINKAMI)
+        // ==========================================
+        
+        // KOMERCYJNE (Czerwone)
         var komercyjneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Chopin", "kod": "EPWA", "opis": "Największe lotnisko w Polsce." }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
-                { "type": "Feature", "properties": { "nazwa": "Kraków Balice", "kod": "EPKK", "opis": "Międzynarodowy port lotniczy." }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
-                { "type": "Feature", "properties": { "nazwa": "Gdańsk Rębiechowo", "kod": "EPGD", "opis": "Port im. Lecha Wałęsy." }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
-                { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kod": "EPKT", "opis": "Lotnisko czarterowe." }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
+                { 
+                    "type": "Feature", 
+                    "properties": { 
+                        "nazwa": "Warszawa Chopin", 
+                        "kod": "EPWA", 
+                        "opis": "Największe lotnisko w Polsce. Obsługuje ok. 40% ruchu pasażerskiego.",
+                        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG/320px-Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG",
+                        "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie"
+                    }, 
+                    "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } 
+                },
+                { 
+                    "type": "Feature", 
+                    "properties": { 
+                        "nazwa": "Kraków Balice", 
+                        "kod": "EPKK", 
+                        "opis": "Międzynarodowy port lotniczy im. Jana Pawła II. Drugie co do wielkości.",
+                        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Krakow_Airport_terminal.jpg/320px-Krakow_Airport_terminal.jpg",
+                        "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice"
+                    }, 
+                    "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } 
+                },
+                // Pozostałe lotniska (bez zdjęć, żeby kod nie był za długi - możesz dodać sam!)
+                { "type": "Feature", "properties": { "nazwa": "Gdańsk Rębiechowo", "kod": "EPGD", "opis": "Port im. Lecha Wałęsy.", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gda%C5%84sk-R%C4%99biechowo" }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
+                { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kod": "EPKT", "opis": "Główne lotnisko czarterowe." }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
                 { "type": "Feature", "properties": { "nazwa": "Warszawa Modlin", "kod": "EPMO", "opis": "Lotnisko niskokosztowe." }, "geometry": { "type": "Point", "coordinates": [20.6518, 52.4511] } },
                 { "type": "Feature", "properties": { "nazwa": "Wrocław Strachowice", "kod": "EPWR", "opis": "Port Lotniczy Wrocław." }, "geometry": { "type": "Point", "coordinates": [16.8858, 51.1027] } },
                 { "type": "Feature", "properties": { "nazwa": "Poznań Ławica", "kod": "EPPO", "opis": "Jeden z najstarszych portów." }, "geometry": { "type": "Point", "coordinates": [16.8263, 52.4210] } },
@@ -105,17 +124,28 @@
             ]
         };
 
+        // AEROKLUBOWE (Niebieskie)
         var aerokluboweGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Babice", "kod": "EPBC", "opis": "Lotnisko szkoleniowe." }, "geometry": { "type": "Point", "coordinates": [20.9126, 52.2685] } },
+                { 
+                    "type": "Feature", 
+                    "properties": { 
+                        "nazwa": "Warszawa Babice", 
+                        "kod": "EPBC", 
+                        "opis": "Lotnisko szkoleniowe na Bemowie. Siedziba LPR.",
+                        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Lotnisko_Babice_widok_z_powietrza.JPG/320px-Lotnisko_Babice_widok_z_powietrza.JPG",
+                        "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Warszawa-Babice"
+                    }, 
+                    "geometry": { "type": "Point", "coordinates": [20.9126, 52.2685] } 
+                },
+                { "type": "Feature", "properties": { "nazwa": "Jastarnia", "kod": "EPJA", "opis": "Lądowisko trawiaste na Półwyspie Helskim." }, "geometry": { "type": "Point", "coordinates": [18.6791, 54.7103] } },
                 { "type": "Feature", "properties": { "nazwa": "Płock", "kod": "EPPL", "opis": "Aeroklub Ziemi Mazowieckiej." }, "geometry": { "type": "Point", "coordinates": [19.7214, 52.5622] } },
                 { "type": "Feature", "properties": { "nazwa": "Bielsko-Biała", "kod": "EPBA", "opis": "Szybowcowa stolica Polski." }, "geometry": { "type": "Point", "coordinates": [19.0069, 49.8056] } },
                 { "type": "Feature", "properties": { "nazwa": "Żar", "kod": "EPZR", "opis": "Górska Szkoła Szybowcowa." }, "geometry": { "type": "Point", "coordinates": [19.2231, 49.7733] } },
                 { "type": "Feature", "properties": { "nazwa": "Nowy Targ", "kod": "EPNT", "opis": "Najwyżej położone lotnisko." }, "geometry": { "type": "Point", "coordinates": [20.0503, 49.4636] } },
                 { "type": "Feature", "properties": { "nazwa": "Leszno", "kod": "EPLS", "opis": "Słynne lotnisko szybowcowe." }, "geometry": { "type": "Point", "coordinates": [16.5147, 51.8361] } },
                 { "type": "Feature", "properties": { "nazwa": "Toruń", "kod": "EPTO", "opis": "Aeroklub Pomorski." }, "geometry": { "type": "Point", "coordinates": [18.5458, 53.0297] } },
-                { "type": "Feature", "properties": { "nazwa": "Jastarnia", "kod": "EPJA", "opis": "Lądowisko trawiaste na Helu." }, "geometry": { "type": "Point", "coordinates": [18.6791, 54.7103] } },
                 { "type": "Feature", "properties": { "nazwa": "Suwałki", "kod": "EPSU", "opis": "Aeroklub Suwalski." }, "geometry": { "type": "Point", "coordinates": [22.8989, 54.0725] } },
                 { "type": "Feature", "properties": { "nazwa": "Kielce Masłów", "kod": "EPKA", "opis": "Aeroklub Kielecki." }, "geometry": { "type": "Point", "coordinates": [20.7297, 50.8967] } },
                 { "type": "Feature", "properties": { "nazwa": "Mielec", "kod": "EPML", "opis": "Lotnisko przyszłościowe." }, "geometry": { "type": "Point", "coordinates": [21.4633, 50.3222] } },
@@ -124,12 +154,22 @@
             ]
         };
 
+        // HISTORYCZNE (Szare)
         var historyczneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
+                { 
+                    "type": "Feature", 
+                    "properties": { 
+                        "nazwa": "Kraków Rakowice-Czyżyny", 
+                        "opis": "Jedno z najstarszych lotnisk wojskowych na świecie. Obecnie Muzeum Lotnictwa Polskiego.",
+                        "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Krakow_Rakowice_Czyzyny_Airport.jpg/320px-Krakow_Rakowice_Czyzyny_Airport.jpg",
+                        "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Krak%C3%B3w-Rakowice-Czy%C5%BCyny"
+                    }, 
+                    "geometry": { "type": "Point", "coordinates": [19.9900, 50.0760] } 
+                },
                 { "type": "Feature", "properties": { "nazwa": "Warszawa Mokotów", "opis": "Od 1920 obsługiwało regularne loty. Obecnie park." }, "geometry": { "type": "Point", "coordinates": [21.0000, 52.2100] } },
                 { "type": "Feature", "properties": { "nazwa": "Gdańsk Wrzeszcz", "opis": "Do 1974. Obecnie osiedle." }, "geometry": { "type": "Point", "coordinates": [18.6100, 54.3900] } },
-                { "type": "Feature", "properties": { "nazwa": "Kraków Rakowice-Czyżyny", "opis": "1924-1963. Obecnie Muzeum." }, "geometry": { "type": "Point", "coordinates": [19.9900, 50.0760] } },
                 { "type": "Feature", "properties": { "nazwa": "Gdynia w Rumi-Zagórzu", "opis": "1935-1939. Loty PLL LOT." }, "geometry": { "type": "Point", "coordinates": [18.4300, 54.5700] } },
                 { "type": "Feature", "properties": { "nazwa": "Wrocław Gądów Mały", "opis": "Do 1958. Obecnie osiedle." }, "geometry": { "type": "Point", "coordinates": [16.9700, 51.1200] } },
                 { "type": "Feature", "properties": { "nazwa": "Szczecin Dąbie", "opis": "Pasażerskie do 1968 roku." }, "geometry": { "type": "Point", "coordinates": [14.6300, 53.3900] } },
@@ -142,7 +182,7 @@
             ]
         };
 
-        // --- MAPA GŁÓWNA ---
+        // --- MAPA ---
         var map = L.map('map').setView([52.00, 19.00], 6);
 
         // Podkłady
@@ -150,10 +190,42 @@
         var esriSatelita = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
         var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
 
-        // Funkcje stylizacji
-        function onEachPopup(feature, layer) {
-            layer.bindPopup("<b>" + feature.properties.nazwa + "</b><br>" + (feature.properties.kod ? "Kod: " + feature.properties.kod + "<br>" : "") + "<i>" + feature.properties.opis + "</i>");
+        // --- NOWA FUNKCJA TWORZENIA DYMKÓW (MULTIMEDIALNA) ---
+        function createPopupContent(feature) {
+            var props = feature.properties;
+            var html = "<div class='custom-popup'>";
+            
+            // Tytuł
+            html += "<h3>" + props.nazwa + "</h3>";
+            
+            // Zdjęcie (jeśli istnieje w danych)
+            if (props.foto) {
+                html += "<img src='" + props.foto + "' class='popup-photo' alt='" + props.nazwa + "'>";
+            }
+            
+            // Kod ICAO (jeśli jest)
+            if (props.kod) {
+                html += "<b>Kod ICAO:</b> " + props.kod + "<br>";
+            }
+            
+            // Opis
+            html += "<i>" + props.opis + "</i><br>";
+            
+            // Link do Wikipedii (jeśli istnieje)
+            if (props.wiki) {
+                html += "<a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a>";
+            }
+            
+            html += "</div>";
+            return html;
         }
+
+        // Funkcja spinająca dymki z warstwami
+        function onEachPopup(feature, layer) {
+            layer.bindPopup(createPopupContent(feature));
+        }
+
+        // Style kółek
         function styleK(f, l) { return L.circleMarker(l, { radius: 8, fillColor: "#d63031", color: "#fff", weight: 2, fillOpacity: 0.9 }); }
         function styleA(f, l) { return L.circleMarker(l, { radius: 6, fillColor: "#0984e3", color: "#fff", weight: 2, fillOpacity: 0.8 }); }
         function styleH(f, l) { return L.circleMarker(l, { radius: 7, fillColor: "#636e72", color: "#2d3436", weight: 2, fillOpacity: 0.8 }); }
@@ -163,11 +235,10 @@
         var layerAeroklubowe = L.geoJSON(aerokluboweGeoJSON, { pointToLayer: styleA, onEachFeature: onEachPopup });
         var layerHistoryczne = L.geoJSON(historyczneGeoJSON, { pointToLayer: styleH, onEachFeature: onEachPopup });
 
-        // Dodanie warstw na start
+        // Dodanie warstw
         layerKomercyjne.addTo(map);
         layerHistoryczne.addTo(map);
 
-        // Grupa do wyszukiwarki
         var wszystkieLotniska = L.layerGroup([layerKomercyjne, layerAeroklubowe, layerHistoryczne]);
 
         // Panel Warstw
@@ -178,12 +249,11 @@
               "<span style='color:#636e72; font-weight:bold'>Historyczne</span>": layerHistoryczne }
         ).addTo(map);
 
-        // --- LEGENDA (POPRAWIONA) ---
+        // Legenda Flexbox
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
             div.innerHTML += '<h4>Legenda</h4>';
-            // Każdy element w osobnym DIVie, żeby Flexbox zadziałał
             div.innerHTML += '<div><i style="background: #d63031;"></i> Pasażerskie</div>';
             div.innerHTML += '<div><i style="background: #0984e3;"></i> Aeroklubowe</div>';
             div.innerHTML += '<div><i style="background: #636e72;"></i> Historyczne</div>';
@@ -191,34 +261,22 @@
         };
         legend.addTo(map);
 
-        // ==========================================
-        //  DODATKI (WTYCZKI)
-        // ==========================================
-
-        // 1. WYSZUKIWARKA
+        // --- WTYCZKI ---
+        // 1. Wyszukiwarka
         var searchControl = new L.Control.Search({
-            layer: wszystkieLotniska,
-            propertyName: 'nazwa',
-            marker: false,
+            layer: wszystkieLotniska, propertyName: 'nazwa', marker: false,
             moveToLocation: function(latlng, title, map) { map.setView(latlng, 14); }
         });
         map.addControl(searchControl);
 
-        // 2. MINIMAPA
+        // 2. MiniMapa
         var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-        var miniMap = new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
+        new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
 
-        // 3. LINIJKA
-        L.control.polylineMeasure({
-            position: 'topleft',
-            unit: 'metres',
-            showBearings: false,
-            clearMeasurementsOnStop: false,
-            showClearControl: true,
-            showUnitControl: true
-        }).addTo(map);
+        // 3. Linijka
+        L.control.polylineMeasure({ position: 'topleft', unit: 'metres', showClearControl: true }).addTo(map);
 
-        // 4. OSM DATA PICKER
+        // 4. OSM Data Picker
         L.OSMDataPicker.addControl(map);
 
     </script>
