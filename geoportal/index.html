@@ -25,7 +25,7 @@
         .custom-popup { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; max-width: 280px; }
         .custom-popup h3 { margin: 0 0 5px 0; color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 3px; }
         
-        /* Styl dla kodów w dymku */
+        /* NOWOŚĆ: Styl dla ramki z kodami */
         .codes-box { 
             background-color: #f1f2f6; 
             padding: 5px; 
@@ -36,11 +36,12 @@
             font-size: 12px;
             color: #2c3e50;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Rozrzuca kody na boki */
+            border: 1px solid #dcdde1;
         }
 
         .popup-photo { width: 100%; height: auto; border-radius: 4px; margin: 8px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: block; }
-        .wiki-link { display: inline-block; padding: 5px 10px; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .wiki-link { display: inline-block; padding: 5px 10px; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box; }
         .wiki-link:hover { background-color: #2980b9; }
 
         /* Fix ikonki wtyczki */
@@ -106,7 +107,7 @@
         var aerokluboweGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                // Aerokluby zazwyczaj nie mają IATA, więc wpisujemy "-", ale mają ICAO
+                // Aerokluby często nie mają IATA, wpisujemy "-"
                 { "type": "Feature", "properties": { 
                     "nazwa": "Warszawa Babice", 
                     "kodICAO": "EPBC", "kodIATA": "-",
@@ -256,6 +257,7 @@
     </script>
 </body>
 </html>
+
 
 
 
