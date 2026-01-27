@@ -17,20 +17,20 @@
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
         #map { width: 100%; height: 100vh; }
         
-        /* --- TYTUŁ MAPY (NOWY) --- */
+        /* --- TYTUŁ MAPY --- */
         .map-title {
             position: absolute;
             top: 20px;
             left: 50%;
-            transform: translateX(-50%); /* Idealne centrowanie */
-            z-index: 1000; /* Nad mapą */
+            transform: translateX(-50%);
+            z-index: 1000;
             background: rgba(255, 255, 255, 0.95);
             padding: 10px 25px;
-            border-radius: 30px; /* Zaokrąglone rogi */
+            border-radius: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-align: center;
             border: 1px solid #ddd;
-            pointer-events: none; /* Żeby nie blokowało myszki przy klikaniu obok */
+            pointer-events: none;
         }
         .map-title h1 {
             margin: 0;
@@ -47,51 +47,68 @@
             font-weight: 600;
         }
 
-        /* --- STYL IKONY SAMOLOTU (NOWY) --- */
+        /* --- STYL IKONY SAMOLOTU --- */
         .plane-icon {
             background: transparent;
             border: none;
         }
         .plane-icon svg {
-            filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4)); /* Cień pod samolotem */
+            filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4));
             transition: transform 0.3s;
         }
         .plane-icon:hover svg {
-            transform: scale(1.3) rotate(-10deg); /* Efekt po najechaniu */
+            transform: scale(1.3) rotate(-10deg);
         }
 
         /* --- LEGENDA --- */
         .legend { background: white; padding: 12px; color: #333; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-size: 13px; min-width: 140px; }
         .legend h4 { margin: 0 0 10px 0; font-size: 15px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .legend div { display: flex; align-items: center; margin-bottom: 6px; }
-        /* Ikona samolotu w legendzie */
         .legend svg { width: 20px; height: 20px; margin-right: 8px; filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3)); }
 
         /* --- POPUPY --- */
         .custom-popup { font-size: 13px; max-width: 300px; }
         .custom-popup h3 { margin: 0 0 8px 0; color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 3px; }
         
-        /* Ramka z kodami */
         .codes-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; }
         .code-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #dee2e6; padding-bottom: 4px; margin-bottom: 2px; }
         .code-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
         .code-label { color: #7f8c8d; font-size: 11px; text-transform: uppercase; font-weight: 600; }
         .code-value { font-family: 'Consolas', 'Monaco', monospace; font-weight: bold; color: #2c3e50; background-color: #e2e6ea; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
 
-        /* Zdjęcie */
         .popup-photo { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: block; background-color: #eee; }
         
-        /* Link */
-        .wiki-link { display: inline-block; padding: 8px 0; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; width: 100%; text-align: center; transition: background 0.3s; }
+        /* PRZYCISKI W POPUPIE */
+        
+        /* 1. Wikipedia (Niebieski) */
+        .wiki-link { display: inline-block; padding: 6px 0; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; transition: background 0.3s; margin-top: 4px; }
         .wiki-link:hover { background-color: #2980b9; }
 
-        /* Responsywność tytułu */
+        /* 2. Flightradar24 (Żółty) - NOWY STYL */
+        .fr-btn {
+            display: block;
+            margin-top: 6px;
+            padding: 8px 0;
+            background-color: #febc11; /* Kolor Flightradar */
+            color: #222 !important;     /* Ciemny tekst dla kontrastu */
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #d49a00;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .fr-btn:hover {
+            background-color: #e5a90e;
+        }
+
         @media (max-width: 600px) {
             .map-title { top: 10px; padding: 8px 15px; width: 60%; }
             .map-title h1 { font-size: 16px; }
         }
 
-        /* Poprawka dla wtyczki data picker */
         .leaflet-control-osmdatapicker { background-image: url('assets/openstreetmap.svg') !important; background-size: 24px 24px; background-repeat: no-repeat; background-position: center; background-color: white !important; width: 34px !important; height: 34px !important; border: 2px solid #ccc; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; }
         #osmdatapicker-dialog { z-index: 9999 !important; }
     </style>
@@ -106,7 +123,8 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="leaflet-osmdatapicker.js"></script> <script src="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.src.js"></script>
+    <script src="leaflet-osmdatapicker.js"></script>
+    <script src="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.src.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
     <script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
 
@@ -114,33 +132,33 @@
         // --- INICJALIZACJA MAPY ---
         var map = L.map('map').setView([52.00, 19.00], 6);
 
-        // --- WARSTWY PODKŁADOWE ---
+        // --- WARSTWY ---
         var osmStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
         var esriSatelita = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
         var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
 
         // ==========================================
-        //  DANE LOTNISK (GeoJSON)
+        //  DANE LOTNISK (Zaktualizowane o linki FR24)
         // ==========================================
 
         var komercyjneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Chopin", "kodICAO": "EPWA", "kodIATA": "WAW", "opis": "Największe lotnisko w Polsce.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie" }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
-                { "type": "Feature", "properties": { "nazwa": "Kraków Balice", "kodICAO": "EPKK", "kodIATA": "KRK", "opis": "Międzynarodowy port lotniczy.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Krakow_Airport_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice" }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
-                { "type": "Feature", "properties": { "nazwa": "Gdańsk Rębiechowo", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Port im. Lecha Wałęsy.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gda%C5%84sk-R%C4%99biechowo" }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
-                { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kodICAO": "EPKT", "kodIATA": "KTW", "opis": "Główne lotnisko czarterowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Katowice_Airport_Terminal_C.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Katowice-Pyrzowice" }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Modlin", "kodICAO": "EPMO", "kodIATA": "WMI", "opis": "Lotnisko niskokosztowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Warszawa-Modlin.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Modlin" }, "geometry": { "type": "Point", "coordinates": [20.6518, 52.4511] } },
-                { "type": "Feature", "properties": { "nazwa": "Wrocław Strachowice", "kodICAO": "EPWR", "kodIATA": "WRO", "opis": "Port Lotniczy Wrocław.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Wroclaw_airport_terminal.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Wroc%C5%82aw-Strachowice" }, "geometry": { "type": "Point", "coordinates": [16.8858, 51.1027] } },
-                { "type": "Feature", "properties": { "nazwa": "Poznań Ławica", "kodICAO": "EPPO", "kodIATA": "POZ", "opis": "Jeden z najstarszych portów.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Poznan_Lawica_Airport_-_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Pozna%C5%84-%C5%81awica" }, "geometry": { "type": "Point", "coordinates": [16.8263, 52.4210] } },
-                { "type": "Feature", "properties": { "nazwa": "Rzeszów Jasionka", "kodICAO": "EPRZ", "kodIATA": "RZE", "opis": "Ważny węzeł cargo.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Rzesz%C3%B3w-Jasionka" }, "geometry": { "type": "Point", "coordinates": [22.0187, 50.1100] } },
-                { "type": "Feature", "properties": { "nazwa": "Szczecin Goleniów", "kodICAO": "EPSC", "kodIATA": "SZZ", "opis": "Port Lotniczy NSZZ Solidarność.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Airport_Szczecin-Goleniow_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Szczecin-Goleni%C3%B3w" }, "geometry": { "type": "Point", "coordinates": [14.9022, 53.5847] } },
-                { "type": "Feature", "properties": { "nazwa": "Lublin Świdnik", "kodICAO": "EPLB", "kodIATA": "LUZ", "opis": "Port Lotniczy Lublin.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Lublin" }, "geometry": { "type": "Point", "coordinates": [22.7136, 51.2403] } },
-                { "type": "Feature", "properties": { "nazwa": "Bydgoszcz Szwederowo", "kodICAO": "EPBY", "kodIATA": "BZG", "opis": "Port im. Paderewskiego.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Bydgoszcz_Airport_Terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Bydgoszcz-Szwederowo" }, "geometry": { "type": "Point", "coordinates": [17.9777, 53.0968] } },
-                { "type": "Feature", "properties": { "nazwa": "Łódź Lublinek", "kodICAO": "EPLL", "kodIATA": "LCJ", "opis": "Port im. Reymonta.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lodz_airport_terminal_2013.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_%C5%81%C3%B3d%C5%BA-Lublinek" }, "geometry": { "type": "Point", "coordinates": [19.3981, 51.7219] } },
-                { "type": "Feature", "properties": { "nazwa": "Olsztyn Mazury", "kodICAO": "EPSY", "kodIATA": "SZY", "opis": "Szymany.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Olsztyn-Mazury_-_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Olsztyn-Mazury" }, "geometry": { "type": "Point", "coordinates": [20.9377, 53.4819] } },
-                { "type": "Feature", "properties": { "nazwa": "Zielona Góra Babimost", "kodICAO": "EPZG", "kodIATA": "IEG", "opis": "Port regionalny.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Zielona_G%C3%B3ra-Babimost.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Zielona_G%C3%B3ra-Babimost" }, "geometry": { "type": "Point", "coordinates": [15.7986, 52.1385] } },
-                { "type": "Feature", "properties": { "nazwa": "Radom Sadków", "kodICAO": "EPRA", "kodIATA": "RDO", "opis": "Warszawa-Radom.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Warszawa-Radom%2C_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Radom" }, "geometry": { "type": "Point", "coordinates": [21.2130, 51.3888] } }
+                { "type": "Feature", "properties": { "nazwa": "Warszawa Chopin", "kodICAO": "EPWA", "kodIATA": "WAW", "opis": "Największe lotnisko w Polsce.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie", "fr24": "https://www.flightradar24.com/data/airports/waw" }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
+                { "type": "Feature", "properties": { "nazwa": "Kraków Balice", "kodICAO": "EPKK", "kodIATA": "KRK", "opis": "Międzynarodowy port lotniczy.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Krakow_Airport_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice", "fr24": "https://www.flightradar24.com/data/airports/krk" }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
+                { "type": "Feature", "properties": { "nazwa": "Gdańsk Rębiechowo", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Port im. Lecha Wałęsy.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gda%C5%84sk-R%C4%99biechowo", "fr24": "https://www.flightradar24.com/data/airports/gdn" }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
+                { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kodICAO": "EPKT", "kodIATA": "KTW", "opis": "Główne lotnisko czarterowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Katowice_Airport_Terminal_C.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Katowice-Pyrzowice", "fr24": "https://www.flightradar24.com/data/airports/ktw" }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
+                { "type": "Feature", "properties": { "nazwa": "Warszawa Modlin", "kodICAO": "EPMO", "kodIATA": "WMI", "opis": "Lotnisko niskokosztowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Warszawa-Modlin.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Modlin", "fr24": "https://www.flightradar24.com/data/airports/wmi" }, "geometry": { "type": "Point", "coordinates": [20.6518, 52.4511] } },
+                { "type": "Feature", "properties": { "nazwa": "Wrocław Strachowice", "kodICAO": "EPWR", "kodIATA": "WRO", "opis": "Port Lotniczy Wrocław.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Wroclaw_airport_terminal.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Wroc%C5%82aw-Strachowice", "fr24": "https://www.flightradar24.com/data/airports/wro" }, "geometry": { "type": "Point", "coordinates": [16.8858, 51.1027] } },
+                { "type": "Feature", "properties": { "nazwa": "Poznań Ławica", "kodICAO": "EPPO", "kodIATA": "POZ", "opis": "Jeden z najstarszych portów.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Poznan_Lawica_Airport_-_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Pozna%C5%84-%C5%81awica", "fr24": "https://www.flightradar24.com/data/airports/poz" }, "geometry": { "type": "Point", "coordinates": [16.8263, 52.4210] } },
+                { "type": "Feature", "properties": { "nazwa": "Rzeszów Jasionka", "kodICAO": "EPRZ", "kodIATA": "RZE", "opis": "Ważny węzeł cargo.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Rzesz%C3%B3w-Jasionka", "fr24": "https://www.flightradar24.com/data/airports/rze" }, "geometry": { "type": "Point", "coordinates": [22.0187, 50.1100] } },
+                { "type": "Feature", "properties": { "nazwa": "Szczecin Goleniów", "kodICAO": "EPSC", "kodIATA": "SZZ", "opis": "Port Lotniczy NSZZ Solidarność.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Airport_Szczecin-Goleniow_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Szczecin-Goleni%C3%B3w", "fr24": "https://www.flightradar24.com/data/airports/szz" }, "geometry": { "type": "Point", "coordinates": [14.9022, 53.5847] } },
+                { "type": "Feature", "properties": { "nazwa": "Lublin Świdnik", "kodICAO": "EPLB", "kodIATA": "LUZ", "opis": "Port Lotniczy Lublin.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Lublin", "fr24": "https://www.flightradar24.com/data/airports/luz" }, "geometry": { "type": "Point", "coordinates": [22.7136, 51.2403] } },
+                { "type": "Feature", "properties": { "nazwa": "Bydgoszcz Szwederowo", "kodICAO": "EPBY", "kodIATA": "BZG", "opis": "Port im. Paderewskiego.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Bydgoszcz_Airport_Terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Bydgoszcz-Szwederowo", "fr24": "https://www.flightradar24.com/data/airports/bzg" }, "geometry": { "type": "Point", "coordinates": [17.9777, 53.0968] } },
+                { "type": "Feature", "properties": { "nazwa": "Łódź Lublinek", "kodICAO": "EPLL", "kodIATA": "LCJ", "opis": "Port im. Reymonta.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lodz_airport_terminal_2013.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_%C5%81%C3%B3d%C5%BA-Lublinek", "fr24": "https://www.flightradar24.com/data/airports/lcj" }, "geometry": { "type": "Point", "coordinates": [19.3981, 51.7219] } },
+                { "type": "Feature", "properties": { "nazwa": "Olsztyn Mazury", "kodICAO": "EPSY", "kodIATA": "SZY", "opis": "Szymany.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Olsztyn-Mazury_-_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Olsztyn-Mazury", "fr24": "https://www.flightradar24.com/data/airports/szy" }, "geometry": { "type": "Point", "coordinates": [20.9377, 53.4819] } },
+                { "type": "Feature", "properties": { "nazwa": "Zielona Góra Babimost", "kodICAO": "EPZG", "kodIATA": "IEG", "opis": "Port regionalny.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Zielona_G%C3%B3ra-Babimost.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Zielona_G%C3%B3ra-Babimost", "fr24": "https://www.flightradar24.com/data/airports/ieg" }, "geometry": { "type": "Point", "coordinates": [15.7986, 52.1385] } },
+                { "type": "Feature", "properties": { "nazwa": "Radom Sadków", "kodICAO": "EPRA", "kodIATA": "RDO", "opis": "Warszawa-Radom.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Warszawa-Radom%2C_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Radom", "fr24": "https://www.flightradar24.com/data/airports/rdo" }, "geometry": { "type": "Point", "coordinates": [21.2130, 51.3888] } }
             ]
         };
 
@@ -187,7 +205,6 @@
             var html = "<div class='custom-popup'>";
             html += "<h3>" + props.nazwa + "</h3>";
             if (props.foto) {
-                // referrerpolicy="no-referrer" -> WAŻNE DLA ZDJĘĆ Z WIKI
                 html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer">`;
             }
             html += "<div class='codes-box'>";
@@ -195,8 +212,14 @@
             html += "<div class='code-row'><span class='code-label'>IATA</span><span class='code-value'>" + (props.kodIATA ? props.kodIATA : "n/d") + "</span></div>";
             html += "</div>";
             html += "<i>" + props.opis + "</i><br>";
+            
+            // >>> NOWOŚĆ: Przycisk Flightradar24 <<<
+            if (props.fr24) {
+                html += "<a href='" + props.fr24 + "' target='_blank' class='fr-btn'>✈️ Przyloty i Odloty (Live)</a>";
+            }
+            
             if (props.wiki) {
-                html += "<div style='margin-top:8px;'><a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a></div>";
+                html += "<div style='margin-top:2px;'><a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a></div>";
             }
             html += "</div>";
             return html;
@@ -206,9 +229,7 @@
             layer.bindPopup(createPopupContent(feature));
         }
 
-        // --- IKONY I STYLE (SVG SAMOLOTY) ---
-
-        // Funkcja generująca ikonę wektorową
+        // --- IKONY SAMOLOTÓW (SVG) ---
         function getPlaneIcon(color) {
             var svgPlane = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="28" height="28">
                 <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
@@ -223,41 +244,23 @@
             });
         }
 
-        // 1. Pasażerskie (Czerwone)
-        function styleK(feature, latlng) {
-            return L.marker(latlng, { icon: getPlaneIcon("#d63031") });
-        }
-        
-        // 2. Aeroklubowe (Niebieskie)
-        function styleA(feature, latlng) {
-            return L.marker(latlng, { icon: getPlaneIcon("#0984e3") });
-        }
-        
-        // 3. Historyczne (Szare)
-        function styleH(feature, latlng) {
-            return L.marker(latlng, { icon: getPlaneIcon("#636e72") });
-        }
+        function styleK(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#d63031") }); }
+        function styleA(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#0984e3") }); }
+        function styleH(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#636e72") }); }
 
         // --- TWORZENIE WARSTW ---
         var layerKomercyjne = L.geoJSON(komercyjneGeoJSON, { pointToLayer: styleK, onEachFeature: onEachPopup });
         var layerAeroklubowe = L.geoJSON(aerokluboweGeoJSON, { pointToLayer: styleA, onEachFeature: onEachPopup });
         var layerHistoryczne = L.geoJSON(historyczneGeoJSON, { pointToLayer: styleH, onEachFeature: onEachPopup });
 
-        // Dodanie warstw do mapy
         layerKomercyjne.addTo(map);
         layerAeroklubowe.addTo(map);
         layerHistoryczne.addTo(map);
 
-        // Grupa do wyszukiwarki
         var wszystkieLotniska = L.layerGroup([layerKomercyjne, layerAeroklubowe, layerHistoryczne]);
 
-        // Panel Wyboru Warstw
         L.control.layers(
-            { 
-                "Mapa Drogowa": osmStandard, 
-                "Satelita": esriSatelita, 
-                "Topograficzna": openTopo
-            },
+            { "Mapa Drogowa": osmStandard, "Satelita": esriSatelita, "Topograficzna": openTopo },
             { 
                 "<span style='color:#d63031; font-weight:bold'>Pasażerskie</span>": layerKomercyjne,
                 "<span style='color:#0984e3; font-weight:bold'>Aeroklubowe</span>": layerAeroklubowe,
@@ -265,38 +268,26 @@
             }
         ).addTo(map);
 
-        // Legenda
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
             div.innerHTML += '<h4>Legenda</h4>';
-            // Ikony samolotów w legendzie
-            div.innerHTML += '<div><svg viewBox="0 0 24 24" fill="#d63031"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg> Pasażerskie</div>';
+            div.innerHTML += '<div><svg viewBox="0 0 24 24" fill="#d63031"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg> Pasażerskie (Live)</div>';
             div.innerHTML += '<div><svg viewBox="0 0 24 24" fill="#0984e3"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg> Aeroklubowe</div>';
             div.innerHTML += '<div><svg viewBox="0 0 24 24" fill="#636e72"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg> Historyczne</div>';
             return div;
         };
         legend.addTo(map);
 
-        // Wtyczka: Wyszukiwarka
-        var searchControl = new L.Control.Search({
-            layer: wszystkieLotniska, 
-            propertyName: 'nazwa', marker: false,
-            moveToLocation: function(latlng, title, map) { map.setView(latlng, 14); }
-        });
+        var searchControl = new L.Control.Search({ layer: wszystkieLotniska, propertyName: 'nazwa', marker: false, moveToLocation: function(latlng, title, map) { map.setView(latlng, 14); } });
         map.addControl(searchControl);
 
-        // Wtyczka: Mini Mapa
         var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
 
-        // Wtyczka: Linijka
         L.control.polylineMeasure({ position: 'topleft', unit: 'metres', showClearControl: true }).addTo(map);
         
-        // Wtyczka: Data Picker (jeśli plik JS jest podpięty)
-        if (L.OSMDataPicker) {
-            L.OSMDataPicker.addControl(map);
-        }
+        if (L.OSMDataPicker) { L.OSMDataPicker.addControl(map); }
 
     </script>
 </body>
