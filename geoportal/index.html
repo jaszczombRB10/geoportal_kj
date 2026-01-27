@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geoportal Lotnisk - Wersja Stabilna</title>
+    <title>Geoportal Lotnisk - Wersja Naprawiona</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="osmdatapicker-page.css" />
@@ -22,7 +22,7 @@
         .legend i { width: 16px; height: 16px; margin-right: 10px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); flex-shrink: 0; }
 
         /* Popupy */
-        .custom-popup { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; max-width: 300px; }
+        .custom-popup { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; max-width: 280px; }
         .custom-popup h3 { margin: 0 0 8px 0; color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 3px; }
         
         /* Ramka z kodami */
@@ -63,27 +63,29 @@
         
         var esriSatelita = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
         
-        // >>> NOWA WARSTWA: ESRI NATGEO (Styl Retro/Historyczny) <<<
-        // To jest mapa stylizowana na starą mapę papierową. Działa zawsze i wszędzie.
-        var esriNatGeo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+        var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
+
+        // >>> NOWA WARSTWA HISTORYCZNA: Esri National Geographic (Styl Retro) <<<
+        // Zastępuje niedziałający WIG. Wygląda jak stara mapa papierowa.
+        var retroMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; National Geographic',
             maxZoom: 16
         });
 
         // ==========================================
-        //  DANE LOTNISK (Pełna lista z poprawionymi zdjęciami)
+        //  DANE LOTNISK (Z poprawionymi linkami do zdjęć)
         // ==========================================
 
         var komercyjneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Chopin", "kodICAO": "EPWA", "kodIATA": "WAW", "opis": "Największe lotnisko w Polsce. Główny hub PLL LOT.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie" }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
+                { "type": "Feature", "properties": { "nazwa": "Warszawa Chopin", "kodICAO": "EPWA", "kodIATA": "WAW", "opis": "Największe lotnisko w Polsce.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Chopina_w_Warszawie_-_Terminal_A_-_Hala_Odlot%C3%B3w_-_Strefa_AB.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie" }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
                 { "type": "Feature", "properties": { "nazwa": "Kraków Balice", "kodICAO": "EPKK", "kodIATA": "KRK", "opis": "Międzynarodowy port im. Jana Pawła II.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Krakow_Airport_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice" }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
                 { "type": "Feature", "properties": { "nazwa": "Gdańsk Rębiechowo", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Port im. Lecha Wałęsy.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gda%C5%84sk-R%C4%99biechowo" }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
-                { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kodICAO": "EPKT", "kodIATA": "KTW", "opis": "Główne lotnisko czarterowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Katowice_Airport_Terminal_C.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Katowice-Pyrzowice" }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
+                { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kodICAO": "EPKT", "kodIATA": "KTW", "opis": "Centrum polskiego ruchu czarterowego.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Katowice_Airport_Terminal_C.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Katowice-Pyrzowice" }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
                 { "type": "Feature", "properties": { "nazwa": "Warszawa Modlin", "kodICAO": "EPMO", "kodIATA": "WMI", "opis": "Lotnisko niskokosztowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Warszawa-Modlin.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Modlin" }, "geometry": { "type": "Point", "coordinates": [20.6518, 52.4511] } },
-                { "type": "Feature", "properties": { "nazwa": "Wrocław Strachowice", "kodICAO": "EPWR", "kodIATA": "WRO", "opis": "Port Lotniczy im. Mikołaja Kopernika.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Wroclaw_airport_terminal.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Wroc%C5%82aw-Strachowice" }, "geometry": { "type": "Point", "coordinates": [16.8858, 51.1027] } },
-                { "type": "Feature", "properties": { "nazwa": "Poznań Ławica", "kodICAO": "EPPO", "kodIATA": "POZ", "opis": "Jedno z najstarszych lotnisk w Polsce.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Poznan_Lawica_Airport_-_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Pozna%C5%84-%C5%81awica" }, "geometry": { "type": "Point", "coordinates": [16.8263, 52.4210] } },
+                { "type": "Feature", "properties": { "nazwa": "Wrocław Strachowice", "kodICAO": "EPWR", "kodIATA": "WRO", "opis": "Port Lotniczy Wrocław.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Wroclaw_airport_terminal.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Wroc%C5%82aw-Strachowice" }, "geometry": { "type": "Point", "coordinates": [16.8858, 51.1027] } },
+                { "type": "Feature", "properties": { "nazwa": "Poznań Ławica", "kodICAO": "EPPO", "kodIATA": "POZ", "opis": "Jeden z najstarszych portów.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Poznan_Lawica_Airport_-_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Pozna%C5%84-%C5%81awica" }, "geometry": { "type": "Point", "coordinates": [16.8263, 52.4210] } },
                 { "type": "Feature", "properties": { "nazwa": "Rzeszów Jasionka", "kodICAO": "EPRZ", "kodIATA": "RZE", "opis": "Ważny węzeł cargo.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Rzesz%C3%B3w-Jasionka_-_Terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Rzesz%C3%B3w-Jasionka" }, "geometry": { "type": "Point", "coordinates": [22.0187, 50.1100] } },
                 { "type": "Feature", "properties": { "nazwa": "Szczecin Goleniów", "kodICAO": "EPSC", "kodIATA": "SZZ", "opis": "Port Lotniczy NSZZ Solidarność.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Airport_Szczecin-Goleniow_terminal.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Szczecin-Goleni%C3%B3w" }, "geometry": { "type": "Point", "coordinates": [14.9022, 53.5847] } },
                 { "type": "Feature", "properties": { "nazwa": "Lublin Świdnik", "kodICAO": "EPLB", "kodIATA": "LUZ", "opis": "Terminal zintegrowany z szynobusem.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Port_Lotniczy_Lublin_-_terminal_od_strony_p%C5%82yty_postojowej.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Lublin" }, "geometry": { "type": "Point", "coordinates": [22.7136, 51.2403] } },
@@ -117,10 +119,10 @@
         var historyczneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                { "type": "Feature", "properties": { "nazwa": "Kraków Rakowice-Czyżyny", "kodICAO": "EPKC", "kodIATA": "n/d", "opis": "Muzeum Lotnictwa.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Krakow_Rakowice_Czyzyny_Airport.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Krak%C3%B3w-Rakowice-Czy%C5%BCyny" }, "geometry": { "type": "Point", "coordinates": [19.9900, 50.0760] } },
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Mokotów", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Pole Mokotowskie.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Pole_Mokotowskie_1935_port_lotniczy.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Mokotowskie" }, "geometry": { "type": "Point", "coordinates": [21.0000, 52.2100] } },
-                { "type": "Feature", "properties": { "nazwa": "Gdańsk Wrzeszcz", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Dzielnica Zaspa.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Flughafen_Danzig-Langfuhr_1941.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Gda%C5%84sk-Wrzeszcz" }, "geometry": { "type": "Point", "coordinates": [18.6100, 54.3900] } },
-                { "type": "Feature", "properties": { "nazwa": "Gdynia w Rumi-Zagórzu", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "1935-1939.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Rumia-Zag%C3%B3rze_lotnisko.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gdynia_w_Rumi-Zag%C3%B3rzu" }, "geometry": { "type": "Point", "coordinates": [18.4300, 54.5700] } },
+                { "type": "Feature", "properties": { "nazwa": "Kraków Rakowice-Czyżyny", "kodICAO": "EPKC", "kodIATA": "n/d", "opis": "Muzeum Lotnictwa Polskiego.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Krakow_Rakowice_Czyzyny_Airport.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Krak%C3%B3w-Rakowice-Czy%C5%BCyny" }, "geometry": { "type": "Point", "coordinates": [19.9900, 50.0760] } },
+                { "type": "Feature", "properties": { "nazwa": "Warszawa Mokotów", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Główny port Warszawy do 1934.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Pole_Mokotowskie_1935_port_lotniczy.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Mokotowskie" }, "geometry": { "type": "Point", "coordinates": [21.0000, 52.2100] } },
+                { "type": "Feature", "properties": { "nazwa": "Gdańsk Wrzeszcz", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Działało do 1974. Obecnie dzielnica Zaspa.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Flughafen_Danzig-Langfuhr_1941.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Gda%C5%84sk-Wrzeszcz" }, "geometry": { "type": "Point", "coordinates": [18.6100, 54.3900] } },
+                { "type": "Feature", "properties": { "nazwa": "Gdynia w Rumi-Zagórzu", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Główny port Gdyni w latach 1935-1939.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Rumia-Zag%C3%B3rze_lotnisko.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gdynia_w_Rumi-Zag%C3%B3rzu" }, "geometry": { "type": "Point", "coordinates": [18.4300, 54.5700] } },
                 { "type": "Feature", "properties": { "nazwa": "Wrocław Gądów Mały", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Obecnie osiedle.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Wroclaw_ul_Lotnicza_Budynek_portu_lotniczego_1.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Wroc%C5%82aw-G%C4%85d%C3%B3w_Ma%C5%82y" }, "geometry": { "type": "Point", "coordinates": [16.9700, 51.1200] } },
                 { "type": "Feature", "properties": { "nazwa": "Szczecin Dąbie", "kodICAO": "EPSD", "kodIATA": "n/d", "opis": "Pasażerskie do lat 60.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Aeroklub_Szczecinski_hangar.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Szczecin-D%C4%85bie" }, "geometry": { "type": "Point", "coordinates": [14.6300, 53.3900] } },
                 { "type": "Feature", "properties": { "nazwa": "Katowice Muchowiec (Hist.)", "kodICAO": "EPKM", "kodIATA": "n/d", "opis": "Ruch pasażerski do 1958.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Terminal_lotniska_Katowice-Muchowiec_1930.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Katowice-Muchowiec" }, "geometry": { "type": "Point", "coordinates": [19.0342, 50.2381] } },
@@ -136,25 +138,19 @@
         function createPopupContent(feature) {
             var props = feature.properties;
             var html = "<div class='custom-popup'>";
-            
             html += "<h3>" + props.nazwa + "</h3>";
-            
             if (props.foto) {
-                // referrerpolicy="no-referrer" -> KLUCZ DO DZIAŁANIA ZDJĘĆ Z WIKIPEDII!
+                // referrerpolicy="no-referrer" -> TO JEST KLUCZ DO DZIAŁAJĄCYCH ZDJĘĆ Z WIKIPEDII!
                 html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer">`;
             }
-            
             html += "<div class='codes-box'>";
             html += "<div class='code-row'><span class='code-label'>ICAO</span><span class='code-value'>" + (props.kodICAO ? props.kodICAO : "n/d") + "</span></div>";
             html += "<div class='code-row'><span class='code-label'>IATA</span><span class='code-value'>" + (props.kodIATA ? props.kodIATA : "n/d") + "</span></div>";
             html += "</div>";
-            
             html += "<i>" + props.opis + "</i><br>";
-            
             if (props.wiki) {
                 html += "<div style='margin-top:8px;'><a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a></div>";
             }
-            
             html += "</div>";
             return html;
         }
@@ -163,7 +159,7 @@
             layer.bindPopup(createPopupContent(feature));
         }
 
-        // Style
+        // Style kropek
         function styleK(f, l) { return L.circleMarker(l, { radius: 8, fillColor: "#d63031", color: "#fff", weight: 2, fillOpacity: 0.9 }); }
         function styleA(f, l) { return L.circleMarker(l, { radius: 6, fillColor: "#0984e3", color: "#fff", weight: 2, fillOpacity: 0.8 }); }
         function styleH(f, l) { return L.circleMarker(l, { radius: 7, fillColor: "#636e72", color: "#2d3436", weight: 2, fillOpacity: 0.8 }); }
@@ -173,16 +169,18 @@
         var layerAeroklubowe = L.geoJSON(aerokluboweGeoJSON, { pointToLayer: styleA, onEachFeature: onEachPopup });
         var layerHistoryczne = L.geoJSON(historyczneGeoJSON, { pointToLayer: styleH, onEachFeature: onEachPopup });
 
+        // Dodanie warstw do mapy (W TWOIM KODZIE BRAKOWAŁO AEROKLUBOWEJ!)
         layerKomercyjne.addTo(map);
+        layerAeroklubowe.addTo(map); // <-- TO NAPRAWIŁO BRAK NIEBIESKICH KROPEK
         layerHistoryczne.addTo(map);
 
-        // Panel Warstw (Zmieniona warstwa historyczna na NATGEO - działa zawsze!)
+        // Panel Warstw (Zmieniona warstwa historyczna na RETRO - działa zawsze!)
         L.control.layers(
             { 
                 "Mapa Drogowa": osmStandard, 
                 "Satelita": esriSatelita, 
                 "Topograficzna": openTopo,
-                "<b style='color:brown'>Mapa Historyczna (Retro)</b>": esriNatGeo  // <-- TO ZADZIAŁA
+                "<b style='color:brown'>Mapa Historyczna (Retro)</b>": retroMap // <-- TO NAPRAWIŁO SZARĄ MAPĘ
             },
             { 
                 "<span style='color:#d63031; font-weight:bold'>Pasażerskie</span>": layerKomercyjne,
@@ -215,11 +213,16 @@
         new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
 
         L.control.polylineMeasure({ position: 'topleft', unit: 'metres', showClearControl: true }).addTo(map);
-        L.OSMDataPicker.addControl(map);
+        
+        // Zabezpieczenie przed brakiem pliku OSM Pickera (żeby reszta działała)
+        if (L.OSMDataPicker) {
+            L.OSMDataPicker.addControl(map);
+        }
 
     </script>
 </body>
 </html>
+
 
 
 
