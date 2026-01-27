@@ -76,21 +76,30 @@
         .code-label { color: #7f8c8d; font-size: 11px; text-transform: uppercase; font-weight: 600; }
         .code-value { font-family: 'Consolas', 'Monaco', monospace; font-weight: bold; color: #2c3e50; background-color: #e2e6ea; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
 
-        .popup-photo { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: block; background-color: #eee; }
+        /* Styl zdjęcia - dodany min-height, żeby nie skakało */
+        .popup-photo { 
+            width: 100%; 
+            height: 150px; 
+            object-fit: cover; 
+            border-radius: 4px; 
+            margin-bottom: 10px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+            display: block; 
+            background-color: #eee; 
+        }
+        /* Klasa ukrywająca zepsute zdjęcie */
+        .hidden-photo { display: none !important; }
         
         /* PRZYCISKI W POPUPIE */
-        
-        /* 1. Wikipedia (Niebieski) */
         .wiki-link { display: inline-block; padding: 6px 0; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; transition: background 0.3s; margin-top: 4px; }
         .wiki-link:hover { background-color: #2980b9; }
 
-        /* 2. Flightradar24 (Żółty) - NOWY STYL */
         .fr-btn {
             display: block;
             margin-top: 6px;
             padding: 8px 0;
-            background-color: #febc11; /* Kolor Flightradar */
-            color: #222 !important;     /* Ciemny tekst dla kontrastu */
+            background-color: #febc11;
+            color: #222 !important;
             text-decoration: none;
             border-radius: 4px;
             font-size: 12px;
@@ -99,10 +108,10 @@
             border: 1px solid #d49a00;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             transition: background 0.2s;
+            cursor: pointer;
+            width: 100%;
         }
-        .fr-btn:hover {
-            background-color: #e5a90e;
-        }
+        .fr-btn:hover { background-color: #e5a90e; }
 
         @media (max-width: 600px) {
             .map-title { top: 10px; padding: 8px 15px; width: 60%; }
@@ -129,16 +138,23 @@
     <script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
 
     <script>
-        // --- INICJALIZACJA MAPY ---
+        // Funkcja otwierająca małe okienko (pop-up)
+        function openMiniWindow(url) {
+            var width = 1000;
+            var height = 600;
+            var left = (screen.width - width) / 2;
+            var top = (screen.height - height) / 2;
+            window.open(url, 'FlightRadarPopup', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`);
+        }
+
         var map = L.map('map').setView([52.00, 19.00], 6);
 
-        // --- WARSTWY ---
         var osmStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
         var esriSatelita = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
         var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
 
         // ==========================================
-        //  DANE LOTNISK (Zaktualizowane o linki FR24)
+        //  DANE LOTNISK - POPRAWIONE WSPÓŁRZĘDNE I ZDJĘCIA
         // ==========================================
 
         var komercyjneGeoJSON = {
@@ -165,19 +181,19 @@
         var aerokluboweGeoJSON = {
             "type": "FeatureCollection",
             "features": [
-                { "type": "Feature", "properties": { "nazwa": "Warszawa Babice", "kodICAO": "EPBC", "kodIATA": "-", "opis": "Lotnisko szkoleniowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Babice_widok_z_powietrza.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Warszawa-Babice" }, "geometry": { "type": "Point", "coordinates": [20.9126, 52.2685] } },
-                { "type": "Feature", "properties": { "nazwa": "Jastarnia", "kodICAO": "EPJA", "kodIATA": "-", "opis": "Lądowisko na Helu.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Jastarnia_sport_airport.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/L%C4%85dowisko_Jastarnia" }, "geometry": { "type": "Point", "coordinates": [18.6458, 54.7068] } },
+                { "type": "Feature", "properties": { "nazwa": "Warszawa Babice", "kodICAO": "EPBC", "kodIATA": "-", "opis": "Lotnisko szkoleniowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Babice_widok_z_powietrza.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Warszawa-Babice" }, "geometry": { "type": "Point", "coordinates": [20.9163, 52.2677] } }, /* Poprawione koordynaty */
+                { "type": "Feature", "properties": { "nazwa": "Jastarnia", "kodICAO": "EPJA", "kodIATA": "-", "opis": "Lądowisko na Helu.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Jastarnia_-_lotnisko.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/L%C4%85dowisko_Jastarnia" }, "geometry": { "type": "Point", "coordinates": [18.6430, 54.7111] } }, /* Poprawione koordynaty */
                 { "type": "Feature", "properties": { "nazwa": "Płock", "kodICAO": "EPPL", "kodIATA": "-", "opis": "Aeroklub Mazowiecki.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_P%C5%82ock_2011.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_P%C5%82ock" }, "geometry": { "type": "Point", "coordinates": [19.7214, 52.5622] } },
                 { "type": "Feature", "properties": { "nazwa": "Bielsko-Biała", "kodICAO": "EPBA", "kodIATA": "QEO", "opis": "Szybowcowa stolica.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Bielsko-Bia%C5%82a_Aleksandrowice_airport_-_hangar.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Bielsko-Bia%C5%82a-Aleksandrowice" }, "geometry": { "type": "Point", "coordinates": [19.0069, 49.8056] } },
-                { "type": "Feature", "properties": { "nazwa": "Żar", "kodICAO": "EPZR", "kodIATA": "-", "opis": "Górska Szkoła.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Gora_Zar_Lotnisko_P1220888.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_%C5%BBar" }, "geometry": { "type": "Point", "coordinates": [19.2231, 49.7733] } },
-                { "type": "Feature", "properties": { "nazwa": "Nowy Targ", "kodICAO": "EPNT", "kodIATA": "QWS", "opis": "Najwyżej położone.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Aeroklub_Nowy_Targ.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Nowy_Targ" }, "geometry": { "type": "Point", "coordinates": [20.0503, 49.4636] } },
-                { "type": "Feature", "properties": { "nazwa": "Leszno", "kodICAO": "EPLS", "kodIATA": "-", "opis": "Lotnisko szybowcowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Leszno_-_CSS_AP_-_widok_z_wie%C5%BCy_w_kierunku_p%C3%B3%C5%82nocnym.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Leszno" }, "geometry": { "type": "Point", "coordinates": [16.5147, 51.8361] } },
-                { "type": "Feature", "properties": { "nazwa": "Toruń", "kodICAO": "EPTO", "kodIATA": "-", "opis": "Aeroklub Pomorski.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Ep_torun.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Toru%C5%84" }, "geometry": { "type": "Point", "coordinates": [18.5458, 53.0297] } },
-                { "type": "Feature", "properties": { "nazwa": "Suwałki", "kodICAO": "EPSU", "kodIATA": "ZWK", "opis": "Aeroklub Suwalski.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Suwa%C5%82ki.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Suwa%C5%82ki" }, "geometry": { "type": "Point", "coordinates": [22.8989, 54.0725] } },
-                { "type": "Feature", "properties": { "nazwa": "Kielce Masłów", "kodICAO": "EPKA", "kodIATA": "QYC", "opis": "Aeroklub Kielecki.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Kielce-Mas%C5%82%C3%B3w.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Kielce-Mas%C5%82%C3%B3w" }, "geometry": { "type": "Point", "coordinates": [20.7297, 50.8967] } },
+                { "type": "Feature", "properties": { "nazwa": "Żar", "kodICAO": "EPZR", "kodIATA": "-", "opis": "Górska Szkoła.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Gora_zar.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_%C5%BBar" }, "geometry": { "type": "Point", "coordinates": [19.2194, 49.7711] } }, /* Poprawione zdjęcie i koordynaty */
+                { "type": "Feature", "properties": { "nazwa": "Nowy Targ", "kodICAO": "EPNT", "kodIATA": "QWS", "opis": "Najwyżej położone.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Aeroklub_Nowy_Targ.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Nowy_Targ" }, "geometry": { "type": "Point", "coordinates": [20.0503, 49.4626] } }, /* Poprawione koordynaty */
+                { "type": "Feature", "properties": { "nazwa": "Leszno", "kodICAO": "EPLS", "kodIATA": "-", "opis": "Lotnisko szybowcowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Leszno_-_CSS_AP_-_widok_z_wie%C5%BCy_w_kierunku_p%C3%B3%C5%82nocnym.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Leszno" }, "geometry": { "type": "Point", "coordinates": [16.5219, 51.8350] } }, /* Poprawione koordynaty */
+                { "type": "Feature", "properties": { "nazwa": "Toruń", "kodICAO": "EPTO", "kodIATA": "-", "opis": "Aeroklub Pomorski.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Ep_torun.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Toru%C5%84" }, "geometry": { "type": "Point", "coordinates": [18.5458, 53.0291] } },
+                { "type": "Feature", "properties": { "nazwa": "Suwałki", "kodICAO": "EPSU", "kodIATA": "ZWK", "opis": "Aeroklub Suwalski.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Suwa%C5%82ki.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Suwa%C5%82ki" }, "geometry": { "type": "Point", "coordinates": [22.8936, 54.0741] } }, /* Poprawione koordynaty */
+                { "type": "Feature", "properties": { "nazwa": "Kielce Masłów", "kodICAO": "EPKA", "kodIATA": "QYC", "opis": "Aeroklub Kielecki.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Kielce-Mas%C5%82%C3%B3w.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Kielce-Mas%C5%82%C3%B3w" }, "geometry": { "type": "Point", "coordinates": [20.7340, 50.8968] } }, /* Poprawione koordynaty */
                 { "type": "Feature", "properties": { "nazwa": "Mielec", "kodICAO": "EPML", "kodIATA": "QEA", "opis": "Lotnisko PZL.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Mielec_Lotnisko_2.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Mielec" }, "geometry": { "type": "Point", "coordinates": [21.4633, 50.3222] } },
-                { "type": "Feature", "properties": { "nazwa": "Jelenia Góra", "kodICAO": "EPJG", "kodIATA": "-", "opis": "Aeroklub Jeleniogórski.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Jelenia_G%C3%B3ra.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Jelenia_G%C3%B3ra" }, "geometry": { "type": "Point", "coordinates": [15.7939, 50.8986] } },
-                { "type": "Feature", "properties": { "nazwa": "Arłamów", "kodICAO": "EPAR", "kodIATA": "-", "opis": "Lądowisko hotelowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Ar%C5%82am%C3%B3w_hotel_04.JPG?width=400", "wiki": "https://pl.wikipedia.org/wiki/L%C4%85dowisko_Ar%C5%82am%C3%B3w" }, "geometry": { "type": "Point", "coordinates": [22.5142, 49.6583] } }
+                { "type": "Feature", "properties": { "nazwa": "Jelenia Góra", "kodICAO": "EPJG", "kodIATA": "-", "opis": "Aeroklub Jeleniogórski.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Lotnisko_Jelenia_G%C3%B3ra.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Jelenia_G%C3%B3ra" }, "geometry": { "type": "Point", "coordinates": [15.7852, 50.8986] } }, /* Poprawione koordynaty */
+                { "type": "Feature", "properties": { "nazwa": "Arłamów", "kodICAO": "EPAR", "kodIATA": "-", "opis": "Lądowisko hotelowe.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Arlamow_2022_06.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/L%C4%85dowisko_Ar%C5%82am%C3%B3w" }, "geometry": { "type": "Point", "coordinates": [22.5158, 49.6586] } } /* Poprawione zdjęcie i koordynaty */
             ]
         };
 
@@ -186,8 +202,8 @@
             "features": [
                 { "type": "Feature", "properties": { "nazwa": "Kraków Rakowice-Czyżyny", "kodICAO": "EPKC", "kodIATA": "n/d", "opis": "Muzeum Lotnictwa Polskiego.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Krakow_Rakowice_Czyzyny_Airport.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Krak%C3%B3w-Rakowice-Czy%C5%BCyny" }, "geometry": { "type": "Point", "coordinates": [19.9900, 50.0760] } },
                 { "type": "Feature", "properties": { "nazwa": "Warszawa Mokotów", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Główny port Warszawy do 1934.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Pole_Mokotowskie_1935_port_lotniczy.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Mokotowskie" }, "geometry": { "type": "Point", "coordinates": [21.0000, 52.2100] } },
-                { "type": "Feature", "properties": { "nazwa": "Gdańsk Wrzeszcz", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Działało do 1974. Obecnie dzielnica Zaspa.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Flughafen_Danzig-Langfuhr_1941.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Gda%C5%84sk-Wrzeszcz" }, "geometry": { "type": "Point", "coordinates": [18.6100, 54.3900] } },
-                { "type": "Feature", "properties": { "nazwa": "Gdynia w Rumi-Zagórzu", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Główny port Gdyni w latach 1935-1939.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Rumia-Zag%C3%B3rze_lotnisko.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gdynia_w_Rumi-Zag%C3%B3rzu" }, "geometry": { "type": "Point", "coordinates": [18.4300, 54.5700] } },
+                { "type": "Feature", "properties": { "nazwa": "Gdańsk Wrzeszcz", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Działało do 1974. Obecnie osiedle.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Flughafen_Danzig-Langfuhr_1941.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Gda%C5%84sk-Wrzeszcz" }, "geometry": { "type": "Point", "coordinates": [18.5996, 54.3925] } }, /* Przesunięte na pas startowy (Zaspa) */
+                { "type": "Feature", "properties": { "nazwa": "Gdynia w Rumi-Zagórzu", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Główny port Gdyni w latach 1935-1939.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Rumia-Zag%C3%B3rze_lotnisko.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gdynia_w_Rumi-Zag%C3%B3rzu" }, "geometry": { "type": "Point", "coordinates": [18.3861, 54.5827] } }, /* Przesunięte w poprawne miejsce historyczne */
                 { "type": "Feature", "properties": { "nazwa": "Wrocław Gądów Mały", "kodICAO": "n/d", "kodIATA": "n/d", "opis": "Obecnie osiedle.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Wroclaw_ul_Lotnicza_Budynek_portu_lotniczego_1.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Wroc%C5%82aw-G%C4%85d%C3%B3w_Ma%C5%82y" }, "geometry": { "type": "Point", "coordinates": [16.9700, 51.1200] } },
                 { "type": "Feature", "properties": { "nazwa": "Szczecin Dąbie", "kodICAO": "EPSD", "kodIATA": "n/d", "opis": "Pasażerskie do lat 60.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Aeroklub_Szczecinski_hangar.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Szczecin-D%C4%85bie" }, "geometry": { "type": "Point", "coordinates": [14.6300, 53.3900] } },
                 { "type": "Feature", "properties": { "nazwa": "Katowice Muchowiec (Hist.)", "kodICAO": "EPKM", "kodIATA": "n/d", "opis": "Ruch pasażerski do 1958.", "foto": "https://commons.wikimedia.org/wiki/Special:FilePath/Terminal_lotniska_Katowice-Muchowiec_1930.jpg?width=400", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Katowice-Muchowiec" }, "geometry": { "type": "Point", "coordinates": [19.0342, 50.2381] } },
@@ -204,18 +220,22 @@
             var props = feature.properties;
             var html = "<div class='custom-popup'>";
             html += "<h3>" + props.nazwa + "</h3>";
+            
+            // --- POPRAWKA DLA ZDJĘĆ ---
+            // Dodano onerror, żeby ukryć obrazek jeśli link nie działa
             if (props.foto) {
-                html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer">`;
+                html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer" onerror="this.classList.add('hidden-photo')">`;
             }
+            
             html += "<div class='codes-box'>";
             html += "<div class='code-row'><span class='code-label'>ICAO</span><span class='code-value'>" + (props.kodICAO ? props.kodICAO : "n/d") + "</span></div>";
             html += "<div class='code-row'><span class='code-label'>IATA</span><span class='code-value'>" + (props.kodIATA ? props.kodIATA : "n/d") + "</span></div>";
             html += "</div>";
             html += "<i>" + props.opis + "</i><br>";
             
-            // >>> NOWOŚĆ: Przycisk Flightradar24 <<<
+            // Przycisk Flightradar24 (Otwiera małe okienko)
             if (props.fr24) {
-                html += "<a href='" + props.fr24 + "' target='_blank' class='fr-btn'>✈️ Przyloty i Odloty (Live)</a>";
+                html += `<button onclick="openMiniWindow('${props.fr24}')" class='fr-btn'>✈️ Przyloty i Odloty (Live)</button>`;
             }
             
             if (props.wiki) {
@@ -292,6 +312,7 @@
     </script>
 </body>
 </html>
+
 
 
 
