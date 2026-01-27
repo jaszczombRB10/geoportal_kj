@@ -19,6 +19,7 @@
         .legend { background: white; padding: 12px; color: #333; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-family: Arial, sans-serif; font-size: 13px; min-width: 140px; }
         .legend h4 { margin: 0 0 10px 0; font-size: 15px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .legend div { display: flex; align-items: center; margin-bottom: 6px; }
+        /* Ikona w legendzie (kółko koloru) */
         .legend i { width: 16px; height: 16px; margin-right: 10px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); flex-shrink: 0; }
 
         /* Popupy */
@@ -38,6 +39,20 @@
         /* Link */
         .wiki-link { display: inline-block; padding: 8px 0; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; width: 100%; text-align: center; transition: background 0.3s; }
         .wiki-link:hover { background-color: #2980b9; }
+
+        /* NOWY STYL DLA SAMOLOTÓW */
+        .plane-icon {
+            background: transparent;
+            border: none;
+        }
+        .plane-icon svg {
+            /* Cień rzucany przez samolot dla lepszej widoczności */
+            filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.4));
+            transition: transform 0.2s;
+        }
+        .plane-icon:hover svg {
+            transform: scale(1.2); /* Powiększenie po najechaniu */
+        }
 
         /* Wtyczki */
         .leaflet-control-osmdatapicker { background-image: url('assets/openstreetmap.svg') !important; background-size: 24px 24px; background-repeat: no-repeat; background-position: center; background-color: white !important; width: 34px !important; height: 34px !important; border: 2px solid #ccc; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; }
@@ -152,19 +167,46 @@
             layer.bindPopup(createPopupContent(feature));
         }
 
-        // Style kropek
-        function styleK(f, l) { return L.circleMarker(l, { radius: 8, fillColor: "#d63031", color: "#fff", weight: 2, fillOpacity: 0.9 }); }
-        function styleA(f, l) { return L.circleMarker(l, { radius: 6, fillColor: "#0984e3", color: "#fff", weight: 2, fillOpacity: 0.8 }); }
-        function styleH(f, l) { return L.circleMarker(l, { radius: 7, fillColor: "#636e72", color: "#2d3436", weight: 2, fillOpacity: 0.8 }); }
+        // --- STYLE IKON (SAMOLOTY) ---
 
-        // Warstwy GeoJSON
+        // Pomocnicza funkcja generująca SVG
+        function getPlaneIcon(color) {
+            var svgPlane = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="28" height="28">
+                <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            </svg>`;
+
+            return L.divIcon({
+                className: 'plane-icon',
+                html: svgPlane,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14],
+                popupAnchor: [0, -10]
+            });
+        }
+
+        // 1. Pasażerskie - Czerwone
+        function styleK(feature, latlng) {
+            return L.marker(latlng, { icon: getPlaneIcon("#d63031") });
+        }
+        
+        // 2. Aeroklubowe - Niebieskie
+        function styleA(feature, latlng) {
+            return L.marker(latlng, { icon: getPlaneIcon("#0984e3") });
+        }
+        
+        // 3. Historyczne - Szare
+        function styleH(feature, latlng) {
+            return L.marker(latlng, { icon: getPlaneIcon("#636e72") });
+        }
+
+        // Warstwy GeoJSON - UWAGA: pointToLayer teraz używa funkcji zwracających L.marker
         var layerKomercyjne = L.geoJSON(komercyjneGeoJSON, { pointToLayer: styleK, onEachFeature: onEachPopup });
         var layerAeroklubowe = L.geoJSON(aerokluboweGeoJSON, { pointToLayer: styleA, onEachFeature: onEachPopup });
         var layerHistoryczne = L.geoJSON(historyczneGeoJSON, { pointToLayer: styleH, onEachFeature: onEachPopup });
 
-        // >>> DODAWANIE DO MAPY (Poprawione) <<<
+        // >>> DODAWANIE DO MAPY <<<
         layerKomercyjne.addTo(map);
-        layerAeroklubowe.addTo(map); // <-- TEGO BRAKOWAŁO U CIEBIE!
+        layerAeroklubowe.addTo(map);
         layerHistoryczne.addTo(map);
 
         // Grupa do wyszukiwarki
@@ -216,6 +258,7 @@
     </script>
 </body>
 </html>
+
 
 
 
