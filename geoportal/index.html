@@ -3,69 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geoportal Lotniczy Polski</title>
+    <title>Geoportal Lotniczy Polski - PRO</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <link rel="stylesheet" href="osmdatapicker-page.css" />
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.src.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css" />
     <link rel="stylesheet" href="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        #map { width: 100%; height: 100vh; }
+        #map { width: 100%; height: 100vh; background: #222; } /* Ciemne tło zanim mapa się załaduje */
         
-        /* TYTUŁ */
+        /* --- EFEKT GLASSMORPHISM (Nowoczesny Tytuł) --- */
         .map-title {
             position: absolute;
             top: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 1000; background: rgba(255, 255, 255, 0.95);
-            padding: 10px 25px; border-radius: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            text-align: center; border: 1px solid #ddd; pointer-events: none;
+            z-index: 1000; 
+            background: rgba(255, 255, 255, 0.85); /* Półprzezroczystość */
+            backdrop-filter: blur(10px); /* Rozmycie tła pod spodem */
+            padding: 10px 30px; 
+            border-radius: 50px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            pointer-events: none;
+            transition: all 0.3s ease;
         }
-        .map-title h1 { margin: 0; font-size: 22px; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; }
-        .map-title span { font-size: 11px; color: #7f8c8d; display: block; margin-top: 2px; font-weight: 600; }
+        .map-title h1 { 
+            margin: 0; font-size: 24px; color: #2c3e50; 
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 800;
+            background: -webkit-linear-gradient(#1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .map-title span { font-size: 11px; color: #555; display: block; margin-top: 4px; font-weight: 600; text-transform: uppercase; }
 
-        /* IKONY */
-        .plane-icon { background: transparent; border: none; }
-        .plane-icon svg { filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4)); transition: transform 0.3s; }
-        .plane-icon:hover svg { transform: scale(1.3) rotate(-10deg); }
-
-        /* LEGENDA */
-        .legend { background: white; padding: 12px; color: #333; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); font-size: 13px; min-width: 140px; }
-        .legend h4 { margin: 0 0 10px 0; font-size: 15px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .legend div { display: flex; align-items: center; margin-bottom: 6px; }
-        .legend svg { width: 20px; height: 20px; margin-right: 8px; filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3)); }
-
-        /* POPUPY */
-        .custom-popup { font-size: 13px; max-width: 300px; }
-        .custom-popup h3 { margin: 0 0 8px 0; color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 3px; }
-        .codes-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px; }
-        .code-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #dee2e6; padding-bottom: 4px; margin-bottom: 2px; }
-        .code-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-        .code-label { color: #7f8c8d; font-size: 11px; text-transform: uppercase; font-weight: 600; }
-        .code-value { font-family: 'Consolas', 'Monaco', monospace; font-weight: bold; color: #2c3e50; background-color: #e2e6ea; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
-
-        .popup-photo { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); display: block; background-color: #eee; }
+        /* --- ANIMACJA PULSOWANIA DLA KOMERCYJNYCH --- */
+        @keyframes pulse-red {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(214, 48, 49, 0.7)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(214, 48, 49, 0.4)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(214, 48, 49, 0)); }
+        }
         
-        .wiki-link { display: inline-block; padding: 6px 0; background-color: #3498db; color: white !important; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; transition: background 0.3s; margin-top: 4px; }
-        .wiki-link:hover { background-color: #2980b9; }
+        .plane-icon { background: transparent; border: none; }
+        .plane-icon svg { filter: drop-shadow(3px 5px 2px rgba(0,0,0,0.3)); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .plane-icon:hover svg { transform: scale(1.5) rotate(-10deg); z-index: 999; }
 
-        .fr-btn { display: block; margin-top: 6px; padding: 8px 0; background-color: #febc11; color: #222 !important; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold; text-align: center; border: 1px solid #d49a00; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: background 0.2s; cursor: pointer; width: 100%; }
-        .fr-btn:hover { background-color: #e5a90e; }
+        /* Klasa dla pulsujących samolotów */
+        .pulsing-icon svg { animation: pulse-red 2s infinite; }
 
-        @media (max-width: 600px) { .map-title { top: 10px; padding: 8px 15px; width: 60%; } .map-title h1 { font-size: 16px; } }
+        /* --- LEGENDA (Styl Glass) --- */
+        .legend { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(5px);
+            padding: 15px; color: #333; border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            font-size: 13px; min-width: 150px; 
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .legend h4 { margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #ddd; padding-bottom: 5px; text-transform: uppercase; }
+        .legend div { display: flex; align-items: center; margin-bottom: 8px; font-weight: 500; }
+        .legend svg { width: 22px; height: 22px; margin-right: 10px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2)); }
+
+        /* --- POPUPY (Styl Glass) --- */
+        .leaflet-popup-content-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .leaflet-popup-tip { background: rgba(255, 255, 255, 0.95); }
+        
+        .custom-popup { font-size: 13px; max-width: 320px; font-family: 'Segoe UI', sans-serif; }
+        .custom-popup h3 { 
+            margin: 0 0 10px 0; color: #2c3e50; font-size: 18px; 
+            border-bottom: 3px solid #3498db; padding-bottom: 5px; 
+            font-weight: 700;
+        }
+        
+        /* Ramka z kodami */
+        .codes-box { 
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef); 
+            border-left: 4px solid #3498db;
+            border-radius: 4px; padding: 8px 12px; margin-bottom: 12px; 
+            display: flex; gap: 15px; 
+        }
+        .code-item { display: flex; flex-direction: column; }
+        .code-label { color: #7f8c8d; font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .code-value { font-family: 'Consolas', monospace; font-weight: bold; color: #2c3e50; font-size: 14px; }
+
+        .popup-photo { 
+            width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); display: block; background-color: #eee; 
+            transition: transform 0.3s;
+        }
+        .popup-photo:hover { transform: scale(1.02); }
+        .hidden-photo { display: none !important; }
+
+        /* PRZYCISKI */
+        .popup-btn {
+            display: block; width: 100%; padding: 10px 0; margin-top: 8px;
+            text-align: center; text-decoration: none; border-radius: 6px;
+            font-size: 12px; font-weight: 700; cursor: pointer; border: none;
+            transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-radar { background-color: #febc11; color: #222 !important; border: 1px solid #d49a00; }
+        .btn-radar:hover { background-color: #ffce4b; transform: translateY(-2px); }
+        
+        .btn-wiki { background-color: #3498db; color: white !important; }
+        .btn-wiki:hover { background-color: #5dade2; transform: translateY(-2px); }
+
+        /* PRZYCISK LOKALIZACJI */
+        .locate-btn {
+            background-color: white; width: 34px; height: 34px;
+            border-radius: 5px; border: 2px solid #ccc; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #333; box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+        }
+        .locate-btn:hover { background-color: #f4f4f4; color: #3498db; }
+
+        @media (max-width: 600px) { .map-title { top: 10px; padding: 8px 15px; width: 70%; } .map-title h1 { font-size: 16px; } }
+        
+        /* Fix ikony OSM Data Picker */
         .leaflet-control-osmdatapicker { background-image: url('assets/openstreetmap.svg') !important; background-size: 24px 24px; background-repeat: no-repeat; background-position: center; background-color: white !important; width: 34px !important; height: 34px !important; border: 2px solid #ccc; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; }
-        #osmdatapicker-dialog { z-index: 9999 !important; }
     </style>
 </head>
 <body>
 
     <div id="map"></div>
+    
     <div class="map-title">
-        <h1>Geoportal Lotniczy Polski</h1>
-        <span>Komercyjne • Aeroklubowe • Historyczne</span>
+        <h1>Geoportal Lotniczy RP</h1>
+        <span>System Informacji Przestrzennej</span>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -75,26 +148,40 @@
     <script src="https://ppete2.github.io/Leaflet.PolylineMeasure/Leaflet.PolylineMeasure.js"></script>
 
     <script>
+        // Funkcja okienka Flightradar
         function openMiniWindow(url) {
-            var width = 1000; var height = 600;
-            var left = (screen.width - width) / 2; var top = (screen.height - height) / 2;
-            window.open(url, 'FlightRadarPopup', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`);
+            var w = 1000, h = 600;
+            var l = (screen.width - w) / 2; var t = (screen.height - h) / 2;
+            window.open(url, 'FR24', `width=${w},height=${h},top=${t},left=${l},scrollbars=yes`);
         }
 
+        // --- INICJALIZACJA MAPY ---
         var map = L.map('map').setView([52.00, 19.00], 6);
+
+        // --- WOW FACTOR: WARSTWY PODKŁADOWE ---
         var osmStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
         var esriSatelita = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
         var openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '© OpenTopoMap' });
+        
+        // NOWOŚĆ: Tryb Nocny (Dark Matter) - wygląda jak radar!
+        var darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        });
+
+        // --- ZAPASOWY OBRAZEK ---
+        var fallbackImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Airport_symbol.svg/300px-Airport_symbol.svg.png";
 
         // ==========================================
-        //  DANE LOTNISK (LINKI UPLOAD.WIKIMEDIA.ORG - WIDTH=800)
+        //  BAZA DANYCH (LINKI HQ)
         // ==========================================
 
         var komercyjneGeoJSON = {
             "type": "FeatureCollection",
             "features": [
                 { "type": "Feature", "properties": { "nazwa": "Warszawa Chopin", "kodICAO": "EPWA", "kodIATA": "WAW", "opis": "Największe lotnisko w Polsce.", "foto": "https://upload.wikimedia.org/wikipedia/commons/9/92/Lotnisko_Chopina_w_Warszawie_2018b.jpg?width=800", "wiki": "https://pl.wikipedia.org/wiki/Lotnisko_Chopina_w_Warszawie", "fr24": "https://www.flightradar24.com/data/airports/waw" }, "geometry": { "type": "Point", "coordinates": [20.9671, 52.1657] } },
-                { "type": "Feature", "properties": { "nazwa": "Kraków Balice", "kodICAO": "EPKK", "kodIATA": "KRK", "opis": "Międzynarodowy port lotniczy.", "foto": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Terminal%2C_Krak%C3%B3w_Airport%2C_2024_%2807%29.jpg/800px-Terminal%2C_Krak%C3%B3w_Airport%2C_2024_%2807%29.jpg", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice", "fr24": "https://www.flightradar24.com/data/airports/krk" }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
+                { "type": "Feature", "properties": { "nazwa": "Kraków Balice", "kodICAO": "EPKK", "kodIATA": "KRK", "opis": "Międzynarodowy port lotniczy.", "foto": "https://upload.wikimedia.org/wikipedia/commons/2/27/Krakow_Airport_terminal.jpg?width=800", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Krak%C3%B3w-Balice", "fr24": "https://www.flightradar24.com/data/airports/krk" }, "geometry": { "type": "Point", "coordinates": [19.7848, 50.0777] } },
                 { "type": "Feature", "properties": { "nazwa": "Gdańsk Rębiechowo", "kodICAO": "EPGD", "kodIATA": "GDN", "opis": "Port im. Lecha Wałęsy.", "foto": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Gda%C5%84sk_Lech_Wa%C5%82%C4%99sa_Airport.JPG?width=800", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Gda%C5%84sk-R%C4%99biechowo", "fr24": "https://www.flightradar24.com/data/airports/gdn" }, "geometry": { "type": "Point", "coordinates": [18.4662, 54.3776] } },
                 { "type": "Feature", "properties": { "nazwa": "Katowice Pyrzowice", "kodICAO": "EPKT", "kodIATA": "KTW", "opis": "Główne lotnisko czarterowe.", "foto": "https://upload.wikimedia.org/wikipedia/commons/5/51/Katowice_Airport_Terminal_C.jpg?width=800", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Katowice-Pyrzowice", "fr24": "https://www.flightradar24.com/data/airports/ktw" }, "geometry": { "type": "Point", "coordinates": [19.0800, 50.4743] } },
                 { "type": "Feature", "properties": { "nazwa": "Warszawa Modlin", "kodICAO": "EPMO", "kodIATA": "WMI", "opis": "Lotnisko niskokosztowe.", "foto": "https://upload.wikimedia.org/wikipedia/commons/0/01/Modlin_airport_terminal.JPG?width=800", "wiki": "https://pl.wikipedia.org/wiki/Port_lotniczy_Warszawa-Modlin", "fr24": "https://www.flightradar24.com/data/airports/wmi" }, "geometry": { "type": "Point", "coordinates": [20.6518, 52.4511] } },
@@ -148,35 +235,53 @@
             ]
         };
 
+        // --- ULEPSZONA FUNKCJA POPUPÓW ---
         function createPopupContent(feature) {
             var props = feature.properties;
-            var html = "<div class='custom-popup'>";
-            html += "<h3>" + props.nazwa + "</h3>";
+            var html = `<div class='custom-popup'>
+                <h3>${props.nazwa}</h3>`;
+            
             if (props.foto) {
-                html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' referrerpolicy="no-referrer">`;
+                html += `<img src='${props.foto}' class='popup-photo' alt='${props.nazwa}' onerror="this.src='${fallbackImage}'">`;
             }
-            html += "<div class='codes-box'>";
-            html += "<div class='code-row'><span class='code-label'>ICAO</span><span class='code-value'>" + (props.kodICAO ? props.kodICAO : "n/d") + "</span></div>";
-            html += "<div class='code-row'><span class='code-label'>IATA</span><span class='code-value'>" + (props.kodIATA ? props.kodIATA : "n/d") + "</span></div>";
-            html += "</div>";
-            html += "<i>" + props.opis + "</i><br>";
-            if (props.fr24) { html += `<button onclick="openMiniWindow('${props.fr24}')" class='fr-btn'>✈️ Przyloty i Odloty (Live)</button>`; }
-            if (props.wiki) { html += "<div style='margin-top:2px;'><a href='" + props.wiki + "' target='_blank' class='wiki-link'>Zobacz na Wikipedii &rarr;</a></div>"; }
+            
+            html += `<div class='codes-box'>
+                        <div class='code-item'><span class='code-label'>ICAO</span><span class='code-value'>${props.kodICAO || "n/d"}</span></div>
+                        <div class='code-item'><span class='code-label'>IATA</span><span class='code-value'>${props.kodIATA || "-"}</span></div>
+                     </div>
+                     <i>${props.opis}</i><br>`;
+            
+            if (props.fr24) { 
+                html += `<button onclick="openMiniWindow('${props.fr24}')" class='popup-btn btn-radar'><i class="fa-solid fa-plane-up"></i> Przyloty i Odloty (Live)</button>`; 
+            }
+            if (props.wiki) { 
+                html += `<a href='${props.wiki}' target='_blank' class='popup-btn btn-wiki'>Zobacz na Wikipedii &rarr;</a>`; 
+            }
             html += "</div>";
             return html;
         }
 
         function onEachPopup(feature, layer) { layer.bindPopup(createPopupContent(feature)); }
 
-        function getPlaneIcon(color) {
+        // --- IKONY Z ANIMACJĄ ---
+        function getPlaneIcon(color, pulse) {
+            var pulseClass = pulse ? "pulsing-icon" : "";
             var svgPlane = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" width="28" height="28"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`;
-            return L.divIcon({ className: 'plane-icon', html: svgPlane, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -10] });
+            return L.divIcon({ 
+                className: `plane-icon ${pulseClass}`, 
+                html: svgPlane, 
+                iconSize: [28, 28], 
+                iconAnchor: [14, 14], 
+                popupAnchor: [0, -10] 
+            });
         }
 
-        function styleK(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#d63031") }); }
-        function styleA(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#0984e3") }); }
-        function styleH(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#636e72") }); }
+        // Dodajemy parametr true dla komercyjnych (żeby pulsowały)
+        function styleK(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#d63031", true) }); }
+        function styleA(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#0984e3", false) }); }
+        function styleH(feature, latlng) { return L.marker(latlng, { icon: getPlaneIcon("#636e72", false) }); }
 
+        // --- WARSTWY ---
         var layerKomercyjne = L.geoJSON(komercyjneGeoJSON, { pointToLayer: styleK, onEachFeature: onEachPopup });
         var layerAeroklubowe = L.geoJSON(aerokluboweGeoJSON, { pointToLayer: styleA, onEachFeature: onEachPopup });
         var layerHistoryczne = L.geoJSON(historyczneGeoJSON, { pointToLayer: styleH, onEachFeature: onEachPopup });
@@ -184,11 +289,22 @@
         layerKomercyjne.addTo(map); layerAeroklubowe.addTo(map); layerHistoryczne.addTo(map);
         var wszystkieLotniska = L.layerGroup([layerKomercyjne, layerAeroklubowe, layerHistoryczne]);
 
+        // Panel Warstw (z Trybem Nocnym)
         L.control.layers(
-            { "Mapa Drogowa": osmStandard, "Satelita": esriSatelita, "Topograficzna": openTopo },
-            { "<span style='color:#d63031; font-weight:bold'>Pasażerskie</span>": layerKomercyjne, "<span style='color:#0984e3; font-weight:bold'>Aeroklubowe</span>": layerAeroklubowe, "<span style='color:#636e72; font-weight:bold'>Historyczne</span>": layerHistoryczne }
+            { 
+                "Mapa Drogowa": osmStandard, 
+                "Satelita (Esri)": esriSatelita, 
+                "Topograficzna": openTopo,
+                "Radar Nocny 🌑": darkMatter 
+            },
+            { 
+                "<span style='color:#d63031; font-weight:bold'>Pasażerskie</span>": layerKomercyjne, 
+                "<span style='color:#0984e3; font-weight:bold'>Aeroklubowe</span>": layerAeroklubowe, 
+                "<span style='color:#636e72; font-weight:bold'>Historyczne</span>": layerHistoryczne 
+            }
         ).addTo(map);
 
+        // --- LEGENDA ---
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
@@ -200,35 +316,35 @@
         };
         legend.addTo(map);
 
+        // --- PRZYCISK LOKALIZACJI (WOW FACTOR) ---
+        var locateControl = L.Control.extend({
+            options: { position: 'topleft' },
+            onAdd: function(map) {
+                var btn = L.DomUtil.create('button', 'locate-btn');
+                btn.innerHTML = '📍';
+                btn.title = "Gdzie jestem?";
+                btn.onclick = function() {
+                    map.locate({setView: true, maxZoom: 10});
+                }
+                return btn;
+            }
+        });
+        map.addControl(new locateControl());
+
+        // Obsługa lokalizacji
+        map.on('locationfound', function(e) {
+            L.circle(e.latlng, {radius: e.accuracy/2, color: '#2ecc71'}).addTo(map).bindPopup("Jesteś tutaj!").openPopup();
+        });
+
+        // Wtyczki
         var searchControl = new L.Control.Search({ layer: wszystkieLotniska, propertyName: 'nazwa', marker: false, moveToLocation: function(latlng, title, map) { map.setView(latlng, 14); } });
         map.addControl(searchControl);
 
         var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         new L.Control.MiniMap(miniMapLayer, { toggleDisplay: true, minimized: false }).addTo(map);
         L.control.polylineMeasure({ position: 'topleft', unit: 'metres', showClearControl: true }).addTo(map);
-        
         if (L.OSMDataPicker) { L.OSMDataPicker.addControl(map); }
 
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
